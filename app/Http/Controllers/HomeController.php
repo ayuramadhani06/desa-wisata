@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Berita;
 use App\Models\KategoriBerita;
+use App\Models\Diskon;
+use App\Models\PaketWisata;
 
 class HomeController extends Controller
 {
@@ -17,12 +19,17 @@ class HomeController extends Controller
                     ->orderBy('tgl_post', 'desc')
                     ->take(3)
                     ->get();
+        $diskons = Diskon::all();
+        $paketWisatas = PaketWisata::all();
         
         return view('home.index', [
             'title' => 'Home',
-            'beritas' => $beritas
+            'beritas' => $beritas,
+            'diskons' => $diskons,
+            'paketwisatas' => $paketWisatas
         ]);
     }
+
 
     /**
      * Show the form for creating a new resource.

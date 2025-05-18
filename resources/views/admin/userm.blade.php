@@ -14,7 +14,7 @@
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+                <div class="sidebar-brand-text mx-3">Halo Admin<sup></sup></div>
             </a>
 
             <!-- Divider -->
@@ -28,7 +28,7 @@
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                Addons
+                Admin
             </div>
 
             <!-- Nav Item - Charts -->

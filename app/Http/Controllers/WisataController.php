@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\ObyekWisata;
 
 class WisataController extends Controller
 {
@@ -11,8 +12,12 @@ class WisataController extends Controller
      */
     public function index()
     {
+        // ngambil data objek wisata dari database
+        $obyekWisatas = ObyekWisata::with('kategori')->latest()->get();
+        
         return view('wisata.index', [
-            'title' => 'Wisata'
+            'title' => 'Wisata',
+            'obyekWisatas' => $obyekWisatas
         ]);
     }
 

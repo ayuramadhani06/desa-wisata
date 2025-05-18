@@ -12,7 +12,8 @@ class PaketWisataController extends Controller
     public function index()
     {
         return view('paketwisata.index', [
-            'title' => 'Paket Wisata'
+            'title' => 'Paket Wisata',
+            'paket_wisata' => $paket_wisata
         ]);
     }
 

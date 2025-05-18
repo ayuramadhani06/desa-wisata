@@ -53,11 +53,11 @@ class AdminController extends Controller
     public function newsStore(Request $request)
     {
         $request->validate([
-            'judul' => 'required|unique:beritas|max:255',
+            'judul' => 'required|max:255',
             'berita' => 'required',
             'tgl_post' => 'required|date',
             'id_kategori_beritas' => 'required|exists:kategori_beritas,id',
-            'foto' => 'required|image|max:2048',
+            'foto' => 'required|image',
         ]);
 
         $filename = null;

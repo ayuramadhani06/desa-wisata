@@ -5,7 +5,7 @@ use App\Http\Controllers\{
     AdminController, BendaharaController, PenginapanController,
     BeritaController, LoginController, LoginnController,
     RegisterController, WisataController, ContactController,
-    OwnerController, HomeController
+    OwnerController, HomeController, ReservasiController, 
 };
 
 // Halaman publik
@@ -14,6 +14,15 @@ Route::get('/penginapan', [PenginapanController::class, 'tampilPenginapan']);
 Route::get('/berita', [BeritaController::class, 'index'])->name('berita.index');
 Route::resource('/wisata', WisataController::class);
 Route::resource('/contact', ContactController::class);
+// Route::resource('/reservasi', ReservasiController::class);
+    Route::get('/reservasi/{id}/create', [ReservasiController::class, 'create'])->name('reservasi.create');
+    Route::post('/reservasi', [ReservasiController::class, 'store'])->name('reservasi.store');
+    Route::get('/reservasi/riwayat', [ReservasiController::class, 'riwayat'])->name('reservasi.riwayat');
+    Route::get('/reservasi', [ReservasiController::class, 'index'])->name('reservasi.index');
+    Route::get('/reservasi/{id}/nota', [ReservasiController::class, 'downloadNota'])->name('reservasi.downloadNota');
+
+    
+
 
 // Registrasi Pelanggan
 Route::middleware('guest')->group(function() {
@@ -58,6 +67,8 @@ Route::middleware(['auth'])->group(function(){
 
     //OWNER
     Route::resource('/owner', OwnerController::class)->middleware('userAkses:pemilik');
+    Route::get('/owner/reservasi/report-pdf', [OwnerController::class, 'exportPdf'])->name('owner.reservasi.pdf');
+
 
     //BENDAHARA
     Route::resource('/bendahara', BendaharaController::class)->middleware('userAkses:bendahara');
@@ -87,6 +98,27 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/kategori-wisata/delete', [BendaharaController::class, 'destroyKategoriWisata'])->name('bendahara.kategori.delete')->middleware('userAkses:bendahara');
 
     Route::get('/pakwis', [BendaharaController::class, 'cont4'])->middleware('userAkses:bendahara');
+    Route::post('/pakwis/store', [BendaharaController::class, 'storePaketWisata'])->name('bendahara.pakwis.store')->middleware('userAkses:bendahara');
+    Route::put('/pakwis/{id}', [BendaharaController::class, 'updatePaketWisata'])->name('bendahara.pakwis.update')->middleware('userAkses:bendahara');
+    Route::delete('/pakwis/{id}', [BendaharaController::class, 'destroyPaketWisata'])->name('bendahara.pakwis.delete')->middleware('userAkses:bendahara');
+
+    //dskn
+    Route::get('/diskon', [BendaharaController::class, 'diskon'])->middleware('userAkses:bendahara');
+    Route::post('/diskon/store', [BendaharaController::class, 'storeDiskon'])->name('bendahara.diskon.store')->middleware('userAkses:bendahara');
+    Route::get('/diskon/{id}/edit', [BendaharaController::class, 'editDiskon'])->name('bendahara.diskon.edit')->middleware('userAkses:bendahara');
+    Route::put('/diskon/{id}/update', [BendaharaController::class, 'updateDiskon'])->name('bendahara.diskon.update')->middleware('userAkses:bendahara'); 
+    Route::delete('/diskon/{id}', [BendaharaController::class, 'destroyDiskon'])->name('bendahara.diskon.delete')->middleware('userAkses:bendahara');
+    
+    //Jenis Pembayaran
+    Route::get('/jenispembayaran', [BendaharaController::class, 'jenispembayaran'])->name('bendahara.jenispembayaran')->middleware('userAkses:bendahara');
+    Route::post('/jenispembayaran/store', [BendaharaController::class, 'storeJenisPembayaran'])->name('bendahara.jenispembayaran.store')->middleware('userAkses:bendahara');
+    Route::put('/jenispembayaran/{id}/update', [BendaharaController::class, 'updateJenisPembayaran'])->name('bendahara.jenispembayaran.update')->middleware('userAkses:bendahara');
+    Route::delete('/jenispembayaran/{id}', [BendaharaController::class, 'destroyJenisPembayaran'])->name('bendahara.jenispembayaran.delete')->middleware('userAkses:bendahara');
+
+    //Jenis Konfirmasi
+    Route::get('/konfir', [BendaharaController::class, 'cont2'])->name('bendahara.konfir');
+    Route::post('/reservasi/{id}/update-status', [BendaharaController::class, 'updateStatusReservasi'])->name('bendahara.updateStatus');
+
 });
 
 // Redirect ke logout jika buka /home secara langsung

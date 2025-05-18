@@ -14,7 +14,7 @@
               <div class="sidebar-brand-icon rotate-n-15">
                   <i class="fas fa-laugh-wink"></i>
               </div>
-              <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+              <div class="sidebar-brand-text mx-3">Halo Bendahara<sup></sup></div>
           </a>
 
           <!-- Divider -->
@@ -28,7 +28,7 @@
 
           <!-- Heading -->
           <div class="sidebar-heading">
-              Addons
+              Bendahara
           </div>
 
           <!-- Nav Item - Charts -->
@@ -55,6 +55,18 @@
               <a class="nav-link" href="pakwis">
                   <i class="fas fa-fw fa-table"></i>
                   <span>Paket Wisata</span></a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="diskon">
+                <i class="fas fa-fw fa-table"></i>
+                <span>Diskon</span></a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="jenispembayaran">
+                <i class="fas fa-fw fa-table"></i>
+                <span>Jenis Pembayaran</span></a>
           </li>
 
           <!-- Divider -->

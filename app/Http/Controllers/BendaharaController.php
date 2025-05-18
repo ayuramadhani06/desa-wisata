@@ -6,6 +6,11 @@ use Illuminate\Http\Request;
 use App\Models\Penginapan;
 use App\Models\ObyekWisata;
 use App\Models\KategoriWisata;
+use App\Models\PaketWisata;
+use App\Models\Diskon;
+use App\Models\JenisPembayaran;
+use App\Models\Reservasi;
+
 use Illuminate\Support\Facades\Storage;
 
 class BendaharaController extends Controller
@@ -29,11 +34,29 @@ class BendaharaController extends Controller
         ]);
     }
 
-    function cont2()
+    public function cont2()
     {
-        return view ('bendahara.konfir', [
-            'title' => 'Konfirmasi'
+        $reservasis = Reservasi::with(['pelanggan', 'paketWisata'])
+            ->latest()
+            ->get();
+
+        return view('bendahara.konfir', [
+            'title' => 'Konfirmasi',
+            'reservasis' => $reservasis
         ]);
+    }
+
+    public function updateStatusReservasi(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:Dipesan,Dibayar,Selesai,Dibatalkan'
+        ]);
+
+        $reservasi = Reservasi::findOrFail($id);
+        $reservasi->status_reservasi = $request->status;
+        $reservasi->save();
+
+        return back()->with('success', 'Status reservasi berhasil diperbarui');
     }
 
     public function cont3($id = null)
@@ -170,12 +193,84 @@ class BendaharaController extends Controller
     }
 
 
-    function cont4()
-    {
-        return view ('bendahara.pakwis', [
-            'title' => 'Bendahara'
+    public function cont4() { //PAKET WISATA paket wisata
+        $paketWisatas = PaketWisata::latest()->get();
+        return view('bendahara.pakwis', [
+            'title' => 'Paket Wisata',
+            'paketWisatas' => $paketWisatas
         ]);
     }
+
+    public function storePaketWisata(Request $request) {
+        $request->validate([
+            'nama_paket' => 'required|max:255',
+            'deskripsi' => 'required',
+            'fasilitas' => 'required|max:255',
+            'harga_per_pack' => 'required|integer',
+            'foto1' => 'nullable|image|max:2048',
+            'foto2' => 'nullable|image|max:2048',
+            'foto3' => 'nullable|image|max:2048',
+            'foto4' => 'nullable|image|max:2048',
+            'foto5' => 'nullable|image|max:2048',
+        ]);
+
+        $data = $request->except(['_token']);
+
+        foreach (['foto1', 'foto2', 'foto3', 'foto4', 'foto5'] as $foto) {
+            if ($request->hasFile($foto)) {
+                $filename = time() . '_' . $request->file($foto)->getClientOriginalName();
+                $request->file($foto)->move(public_path('images/paket-wisata'), $filename);
+                $data[$foto] = $filename;
+            }
+        }
+
+        PaketWisata::create($data);
+
+        return back()->with('success', 'Paket Wisata berhasil ditambahkan.');
+    }
+
+    public function updatePaketWisata(Request $request, $id) {
+        $paketWisata = PaketWisata::findOrFail($id);
+
+        $request->validate([
+            'nama_paket' => 'required|max:255',
+            'deskripsi' => 'required',
+            'fasilitas' => 'required|max:255',
+            'harga_per_pack' => 'required|integer',
+        ]);
+
+        $data = $request->except(['_token']);
+
+        foreach (['foto1', 'foto2', 'foto3', 'foto4', 'foto5'] as $foto) {
+            if ($request->hasFile($foto)) {
+                if ($paketWisata->$foto && file_exists(public_path('images/paket-wisata/' . $paketWisata->$foto))) {
+                    unlink(public_path('images/paket-wisata/' . $paketWisata->$foto));
+                }
+                $filename = time() . '_' . $request->file($foto)->getClientOriginalName();
+                $request->file($foto)->move(public_path('images/paket-wisata'), $filename);
+                $data[$foto] = $filename;
+            }
+        }
+
+        $paketWisata->update($data);
+
+        return redirect('/pakwis')->with('success', 'Paket Wisata berhasil diperbarui.');
+    }
+
+    public function destroyPaketWisata($id) {
+        // $request->validate(['id' => 'required|exists:paket_wisatas,id']);
+        $paketWisata = PaketWisata::findOrFail($id);
+
+        foreach (['foto1', 'foto2', 'foto3', 'foto4', 'foto5'] as $foto) {
+            if ($paketWisata->$foto && file_exists(public_path('images/paket-wisata/' . $paketWisata->$foto))) {
+                unlink(public_path('images/paket-wisata/' . $paketWisata->$foto));
+            }
+        }
+
+        $paketWisata->delete();
+        return redirect('/pakwis')->with('success', 'Paket Wisata berhasil dihapus.');
+    }
+
 
     /**
      * Show the form for creating a new resource.
@@ -237,7 +332,7 @@ class BendaharaController extends Controller
     {
         $penginapan = Penginapan::findOrFail($id);
 
-        $data = $request->validate([
+        $data = $request->validate([ 
             'nama_penginapan' => 'required|string|max:255',
             'deskripsi' => 'required',
             'fasilitas' => 'required|string|max:255',
@@ -262,6 +357,178 @@ class BendaharaController extends Controller
         $penginapan = Penginapan::findOrFail($id);
         $penginapan->delete();
         return back()->with('success', 'Homestay berhasil dihapus!');
+    }
+
+
+    public function diskon() //DISKON diskon
+    {
+        $diskons = Diskon::latest()->get();
+        return view('bendahara.diskon', [
+            'title' => 'Diskon',
+            'diskons' => $diskons
+        ]);
+    }
+
+    /**
+     * Store a new diskon
+     */
+    public function storeDiskon(Request $request)
+    {
+        $request->validate([
+            'kode_diskon' => 'required|unique:diskons|max:50',
+            'nama_diskon' => 'required|max:100',
+            'persentase_diskon' => 'required|numeric|between:0,100',
+            'tanggal_mulai' => 'required|date',
+            'tanggal_berakhir' => 'required|date|after_or_equal:tanggal_mulai',
+            'deskripsi' => 'nullable',
+            'foto' => 'nullable|image|max:2048',
+        ]);
+
+        $data = $request->except(['_token', 'foto']);
+        $data['aktif'] = $request->has('aktif') ? 1 : 0;
+
+        if ($request->hasFile('foto')) {
+            $filename = time() . '_' . $request->file('foto')->getClientOriginalName();
+            $request->file('foto')->move(public_path('images/diskon'), $filename);
+            $data['foto'] = $filename;
+        }
+
+        Diskon::create($data);
+
+        return redirect('/diskon')->with('success', 'Diskon berhasil ditambahkan.');
+    }
+
+    
+    /**
+     * Update an existing diskon
+     */
+    public function updateDiskon(Request $request, $id)
+    {
+        $diskon = Diskon::findOrFail($id);
+
+        $request->validate([
+            'kode_diskon' => 'required|max:50|unique:diskons,kode_diskon,'.$id,
+            'nama_diskon' => 'required|max:100',
+            'persentase_diskon' => 'required|numeric|between:0,100',
+            'tanggal_mulai' => 'required|date',
+            'tanggal_berakhir' => 'required|date|after_or_equal:tanggal_mulai',
+            'deskripsi' => 'nullable',
+            'foto' => 'nullable|image|max:2048',
+        ]);
+
+        $data = $request->except(['_token', '_method', 'foto']);
+        $data['aktif'] = $request->has('aktif') ? 1 : 0;
+
+        if ($request->hasFile('foto')) {
+            // Delete old photo if exists
+            if ($diskon->foto && file_exists(public_path('images/diskon/' . $diskon->foto))) {
+                unlink(public_path('images/diskon/' . $diskon->foto));
+            }
+            
+            $filename = time() . '_' . $request->file('foto')->getClientOriginalName();
+            $request->file('foto')->move(public_path('images/diskon'), $filename);
+            $data['foto'] = $filename;
+        }
+
+        $diskon->update($data);
+
+        return redirect('/diskon')->with('success', 'Diskon berhasil diperbarui.');
+    }
+
+    public function editDiskon($id)
+    {
+        $diskon = Diskon::findOrFail($id);
+        return view('bendahara.edit_diskon', [
+            'title' => 'Edit Diskon',
+            'diskon' => $diskon
+        ]);
+    }
+    /**
+     * Delete a diskon
+     */
+    public function destroyDiskon($id)
+    {
+        $diskon = Diskon::findOrFail($id);
+
+        // Delete photo if exists
+        if ($diskon->foto && file_exists(public_path('images/diskon/' . $diskon->foto))) {
+            unlink(public_path('images/diskon/' . $diskon->foto));
+        }
+
+        $diskon->delete();
+        return redirect('/diskon')->with('success', 'Diskon berhasil dihapus.');
+    }
+
+
+
+    public function jenispembayaran() //PEMBAYARAN pembayaran
+    {
+        $jenisPembayarans = JenisPembayaran::latest()->get();
+        return view('bendahara.jenispembayaran', [
+            'title' => 'Jenis Pembayaran',
+            'jenisPembayarans' => $jenisPembayarans
+        ]);
+    }
+
+    public function storeJenisPembayaran(Request $request)
+    {
+        $request->validate([
+            'jenis_pembayaran' => 'required|max:255',
+            'nomor_tf' => 'nullable|max:30',
+            'foto' => 'nullable|image|max:2048',
+        ]);
+
+        $data = $request->except(['_token', 'foto']);
+
+        if ($request->hasFile('foto')) {
+            $filename = time() . '_' . $request->file('foto')->getClientOriginalName();
+            $request->file('foto')->move(public_path('images/jenispembayaran'), $filename);
+            $data['foto'] = $filename;
+        }
+
+        JenisPembayaran::create($data);
+
+        return redirect('/jenispembayaran')->with('success', 'Jenis pembayaran berhasil ditambahkan.');
+    }
+
+    public function updateJenisPembayaran(Request $request, $id)
+    {
+        $jenisPembayaran = JenisPembayaran::findOrFail($id);
+
+        $request->validate([
+            'jenis_pembayaran' => 'required|max:255',
+            'nomor_tf' => 'nullable|max:30',
+            'foto' => 'nullable|image|max:2048',
+        ]);
+
+        $data = $request->except(['_token', '_method', 'foto']);
+
+        if ($request->hasFile('foto')) {
+            if ($jenisPembayaran->foto && file_exists(public_path('images/jenispembayaran/' . $jenisPembayaran->foto))) {
+                unlink(public_path('images/jenispembayaran/' . $jenisPembayaran->foto));
+            }
+            
+            $filename = time() . '_' . $request->file('foto')->getClientOriginalName();
+            $request->file('foto')->move(public_path('images/jenispembayaran'), $filename);
+            $data['foto'] = $filename;
+        }
+
+        $jenisPembayaran->update($data);
+
+        return redirect('/jenispembayaran')->with('success', 'Jenis pembayaran berhasil diperbarui.');
+    }
+
+    public function destroyJenisPembayaran($id)
+    {
+        $jenisPembayaran = JenisPembayaran::findOrFail($id);
+
+        if ($jenisPembayaran->foto && file_exists(public_path('images/jenispembayaran/' . $jenisPembayaran->foto))) {
+            unlink(public_path('images/jenispembayaran/' . $jenisPembayaran->foto));
+        }
+
+        $jenisPembayaran->delete();
+
+        return redirect('/jenispembayaran')->with('success', 'Jenis pembayaran berhasil dihapus.');
     }
 
   

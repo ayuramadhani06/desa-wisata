@@ -21,6 +21,8 @@
 
     <!-- Custom styles for this template-->
     <link href="{{asset('be/css/sb-admin-2.min.css')}}" rel="stylesheet">
+    
+    
 
 </head>
 <link rel="icon" href="{{asset('images/logo.png')}}">

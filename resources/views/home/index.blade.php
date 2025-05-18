@@ -12,8 +12,9 @@
 @section ('services')
     @include('fe.services')
 @endsection
-{{-- @section ('testimoni')
-    @include('fe.testimoni') --}}
+@section ('diskon')
+    @include('fe.diskon')
+@endsection
 @section ('journey')
     @include('fe.journey')
 @endsection
