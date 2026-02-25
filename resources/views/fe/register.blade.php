@@ -23,7 +23,7 @@
 
 </head>
 
-<body class="bg-gradient-primary">
+<body class="bg-gradient-primary d-flex align-items-center justify-content-center min-vh-100">
 
     <div class="container">
 
@@ -31,7 +31,17 @@
             <div class="card-body p-0">
                 <!-- Nested Row within Card Body -->
                 <div class="row">
-                    <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
+                    <div class="col-lg-5 d-none d-lg-flex align-items-center justify-content-center text-white bg-success">
+
+                        <div class="text-center px-4">
+                            <i class="fas fa-user-plus fa-5x mb-4"></i>
+                            <h2 class="font-weight-bold">Create Account</h2>
+                            <p class="small">
+                                Daftar untuk mulai melakukan reservasi dan menikmati layanan kami.
+                            </p>
+                        </div>
+
+                    </div>
                     <div class="col-lg-7">
                         <div class="p-5">
                             <div class="text-center">
@@ -72,9 +82,19 @@
                                         placeholder="Alamat" required>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="foto">Upload Foto</label>
-                                    <input type="file"  class="form-control form-control-user" name="foto" id="foto" accept="image/*">
+                                <div class="form-group text-center">
+                                    <label class="font-weight-bold d-block mb-3">Upload Foto</label>
+
+                                    <div class="custom-file">
+                                        <input type="file" 
+                                            class="custom-file-input" 
+                                            id="foto" 
+                                            name="foto" 
+                                            accept="image/*">
+                                        <label class="custom-file-label text-center" for="foto">
+                                            Choose file
+                                        </label>
+                                    </div>
                                 </div>
                                 <button type="submit" class="btn btn-primary btn-user btn-block">
                                     Register Account

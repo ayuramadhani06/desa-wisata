@@ -23,7 +23,7 @@
 
 </head>
 
-<body class="bg-gradient-primary">
+<body class="bg-gradient-primary d-flex align-items-center justify-content-center min-vh-100">
 
     <div class="container">
 
@@ -36,7 +36,17 @@
                     <div class="card-body p-0">
                         <!-- Nested Row within Card Body -->
                         <div class="row">
-                            <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+                            <div class="col-lg-6 d-none d-lg-flex align-items-center justify-content-center text-white bg-primary">
+
+                                <div class="text-center px-4">
+                                    <i class="fas fa-sign-in-alt fa-5x mb-4"></i>
+                                    <h2 class="font-weight-bold">Welcome Back</h2>
+                                    <p class="small">
+                                        Silakan login untuk mengakses menu yang sudah disediakan.
+                                    </p>
+                                </div>
+
+                            </div>
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">
@@ -68,7 +78,7 @@
                                                 <label class="custom-control-label" for="customCheck">Remember
                                                     Me</label>
                                             </div>
-                                            <button type="submit" class="btn btn-primary btn-user btn-block">
+                                            <button type="submit" class="btn btn-primary btn-user btn-block mt-3">
                                                 Login
                                             </button>
                                         </div>
@@ -85,9 +95,6 @@
                                     {{-- <div class="text-center">
                                         <a class="small" href="forgot-password.html">Forgot Password?</a>
                                     </div> --}}
-                                    <div class="text-center">
-                                        <a class="small" href="register">Create an Account!</a>
-                                    </div>
                                 </div>
                             </div>
                         </div>
