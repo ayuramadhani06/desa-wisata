@@ -33,7 +33,7 @@ class DummyUsersSeeder extends Seeder
             'email' => 'bendahara@gmail.com',
             'password' => bcrypt('12345'),
             'level' => 'bendahara',
-        ],
+        ], 
     ];
 
     foreach($userData as $key => $val){

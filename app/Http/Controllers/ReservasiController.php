@@ -76,7 +76,7 @@ class ReservasiController extends Controller
 
         // Simpan bukti transfer
         $buktiTfPath = $request->file('bukti_tf')->store('public/bukti_tf');
-        $buktiTfPath = str_replace('public/', '', $buktiTfPath);
+        // $buktiTfPath = str_replace('public/', '', $buktiTfPath);
 
         // Buat reservasi
         $reservasi = Reservasi::create([

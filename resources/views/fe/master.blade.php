@@ -58,9 +58,9 @@
 					</div>
 					<div class="col-lg-6 d-none d-lg-inline-block text-center nav-center-wrap">
 						<ul class="js-clone-nav  text-center site-menu p-0 m-0">
-							<li class="active"><a href="/">Home</a></li>
-							<li><a href="penginapan">Penginapan</a></li>
-							<li><a href="wisata">Wisata</a></li>
+							<li @if ($title === 'Home') class="active" @endif><a href="/">Home</a></li>
+							<li @if ($title === 'Penginapan') class="active" @endif><a href="penginapan">Penginapan</a></li>
+							<li @if ($title === 'Wisata') class="active" @endif><a href="wisata">Wisata</a></li>
 							{{-- <li class="has-children"> --}}
 								{{-- <a href="#">Obyek Wisata</a>
 								<ul class="dropdown">
@@ -73,11 +73,12 @@
 											<li><a href="#">Sub Menu Three</a></li>
 										</ul>
 									</li>
-									<li><a href="#">Menu Three</a></li>
+
 								</ul> --}}
 							{{-- </li> --}}
-							<li><a href="contact">Contact</a></li>
-							<li><a href="berita">Berita</a></li>
+							<li @if ($title === 'Contact') class="active" @endif><a href="contact">Contact</a></li>
+							<li @if ($title === 'Berita') class="active" @endif><a href="berita">Berita</a></li>
+
 	
 						</ul>
 					</div>
@@ -99,6 +100,11 @@
 									</span>
 							</a>
 								<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+									<li>
+										<form action="{{ route('profile.edit') }}" method="GET" class="text-left">
+											@csrf
+											<button type="submit" class="dropdown-item">Edit Profile</button>									
+										</form>
 										<form action="{{ route('reservasi.riwayat') }}" method="GET" class="text-left">
 											@csrf
 											<button type="submit" class="dropdown-item">Daftar Reservasi</button>									
@@ -110,7 +116,7 @@
 									</li>
 								</ul>
 						</div>
-						<!-- <form method="POST" action="{{ route('logoutP') }}" id="logout-form">
+						<!-- <form method="POST" action="{{ route('logoutP') }}" id="logout-form"> 
 							@csrf
 							<ul class="js-clone-nav d-none d-lg-inline-block text-end site-menu">
 								<li class="cta-button">
@@ -154,7 +160,7 @@
 		@elseif ($title === 'Wisata')
 			@yield('troon')
 			@yield('wisata')
-			@yield('testimoni')
+			@yield('gallery')
 		@elseif ($title === 'Contact')
 			@yield('troon')
 			@yield('contact')

@@ -64,7 +64,7 @@ class AdminController extends Controller
         if ($request->hasFile('foto')) {
             $file = $request->file('foto');
             $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('images/berita'), $filename);
+            $file->move(public_path('images/berita'), $filename); 
         }
 
         Berita::create([
@@ -90,7 +90,7 @@ class AdminController extends Controller
         ]);
 
         // berita yang akan diupdate
-        $berita = Berita::findOrFail($id);
+        $berita = Berita::findOrFail($id); 
 
         // Handle upload foto jika ada
         if ($request->hasFile('foto')) {

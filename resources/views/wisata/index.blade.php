@@ -5,8 +5,8 @@
 @section ('wisata')
     @include('fe.wisata')
 @endsection
-@section ('testimoni')
-    @include('fe.testimoni')
+@section ('gallery')
+    @include('fe.gallery')
 @endsection
 
     

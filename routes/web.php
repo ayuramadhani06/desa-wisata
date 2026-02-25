@@ -5,7 +5,7 @@ use App\Http\Controllers\{
     AdminController, BendaharaController, PenginapanController,
     BeritaController, LoginController, LoginnController,
     RegisterController, WisataController, ContactController,
-    OwnerController, HomeController, ReservasiController, 
+    OwnerController, HomeController, ReservasiController, ProfileController
 };
 
 // Halaman publik
@@ -17,12 +17,11 @@ Route::resource('/contact', ContactController::class);
 // Route::resource('/reservasi', ReservasiController::class);
     Route::get('/reservasi/{id}/create', [ReservasiController::class, 'create'])->name('reservasi.create');
     Route::post('/reservasi', [ReservasiController::class, 'store'])->name('reservasi.store');
-    Route::get('/reservasi/riwayat', [ReservasiController::class, 'riwayat'])->name('reservasi.riwayat');
+    Route::get('/reservasiriwayat', [ReservasiController::class, 'riwayat'])->name('reservasi.riwayat');
     Route::get('/reservasi', [ReservasiController::class, 'index'])->name('reservasi.index');
     Route::get('/reservasi/{id}/nota', [ReservasiController::class, 'downloadNota'])->name('reservasi.downloadNota');
 
     
-
 
 // Registrasi Pelanggan
 Route::middleware('guest')->group(function() {
@@ -82,7 +81,7 @@ Route::middleware(['auth'])->group(function(){
     
     Route::get('/konfir', [BendaharaController::class, 'cont2'])->middleware('userAkses:bendahara');
 
-    //OBJEK WISATAA
+    //OBJEK WISATA
     Route::get('/obwi', [BendaharaController::class, 'cont3'])->name('bendahara.obwi')->middleware('userAkses:bendahara');
     // objek Wisata
     Route::get('/obwi/{id}/edit', [BendaharaController::class, 'cont3'])->name('bendahara.obwi.edit')->middleware('userAkses:bendahara');
@@ -118,6 +117,10 @@ Route::middleware(['auth'])->group(function(){
     //Jenis Konfirmasi
     Route::get('/konfir', [BendaharaController::class, 'cont2'])->name('bendahara.konfir');
     Route::post('/reservasi/{id}/update-status', [BendaharaController::class, 'updateStatusReservasi'])->name('bendahara.updateStatus');
+
+    //edit profile
+    Route::get('/profileedit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profileupdate', [ProfileController::class, 'update'])->name('profile.update');
 
 });
 

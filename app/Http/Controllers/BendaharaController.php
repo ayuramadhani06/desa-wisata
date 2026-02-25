@@ -341,7 +341,7 @@ class BendaharaController extends Controller
         foreach (['foto1', 'foto2', 'foto3', 'foto4', 'foto5'] as $foto) {
             if ($request->hasFile($foto)) {
                 $data[$foto] = $request->file($foto)->store('penginapan', 'public');
-            }
+            } 
         }
 
         $penginapan->update($data);

@@ -36,14 +36,14 @@
                     
                     
 
-                    <div class="open-hours mt-4">
+                    <!-- <div class="open-hours mt-4">
                         <i class="icon-clock-o"></i>
                         <h4 class="mb-2">Open Hours:</h4>
                         <p>
                             Sunday-Friday:<br>
                             11:00 AM - 23:00 PM
                         </p>
-                    </div>
+                    </div> -->
 
                     <div class="email mt-4">
                         <i class="icon-envelope"></i>
