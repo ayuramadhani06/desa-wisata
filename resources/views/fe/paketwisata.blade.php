@@ -14,9 +14,9 @@
             <div class="col-lg-4">
                 <div class="service-2 left-0 mb-5">
                     @if($paket->foto1)
-                        <img src="{{ asset('images/paket-wisata/' . $paket->foto1) }}" alt="{{ $paket->nama_paket }}" class="img-fluid mb-4 rounded">
+                        <img src="{{ asset('storage/' . $paket->foto1) }}" alt="{{ $paket->nama_paket }}" class="img-fluid mb-4 rounded">
                     @else
-                        <img src="{{ asset('images/default_paket.jpg') }}" alt="Default Paket Image" class="img-fluid mb-4 rounded">
+                        <img src="{{ asset('storage/default_paket.jpg') }}" alt="Default Paket Image" class="img-fluid mb-4 rounded">
                     @endif
                     <div>
                         <h3>{{ $paket->nama_paket }}</h3>
@@ -62,7 +62,7 @@
                                         <!-- <div class="carousel-inner"> --> //gajadi karosel HEHEHEH
                                             @if($paket->foto1)
                                                 <div class="carousel-item active">
-                                                    <img src="{{ asset('images/paket-wisata/' . $paket->foto1) }}" class="d-block w-100" alt="Foto 1">
+                                                    <img src="{{ asset('storage/' . $paket->foto1) }}" class="d-block w-100" alt="Foto 1">
                                                 </div>
                                             @endif
                                             <!-- @if($paket->foto2)

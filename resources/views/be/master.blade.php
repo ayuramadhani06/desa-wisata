@@ -96,6 +96,7 @@
     <!-- Bootstrap core JavaScript-->
     <script src="{{asset('be/vendor/jquery/jquery.min.js')}}"></script>
     <script src="{{asset('be/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
     <script src="{{asset('be/vendor/jquery-easing/jquery.easing.min.js')}}"></script>

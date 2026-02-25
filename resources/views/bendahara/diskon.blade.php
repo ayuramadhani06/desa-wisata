@@ -40,7 +40,12 @@
                                 {{ \Carbon\Carbon::parse($diskon->tanggal_berakhir)->format('d M Y') }}
                             </td>
                             <td>
-                                @if($diskon->aktif)
+                                @php
+                                    $now = \Carbon\Carbon::now();
+                                    $isAktif = $diskon->aktif && $now->between(\Carbon\Carbon::parse($diskon->tanggal_mulai), \Carbon\Carbon::parse($diskon->tanggal_berakhir));
+                                @endphp
+
+                                @if($isAktif)
                                     <span class="badge badge-success">Aktif</span>
                                 @else
                                     <span class="badge badge-secondary">Nonaktif</span>
@@ -111,8 +116,13 @@
                         <input type="file" class="form-control-file" id="foto" name="foto">
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="aktif" name="aktif" checked>
-                        <label class="form-check-label" for="aktif">
+                        @php
+                            $now = \Carbon\Carbon::now();
+                            $isAktif = $diskon->aktif && $now->between(\Carbon\Carbon::parse($diskon->tanggal_mulai), \Carbon\Carbon::parse($diskon->tanggal_berakhir));
+                        @endphp
+
+                        <input class="form-check-input" type="checkbox" id="edit_aktif{{ $diskon->id }}" name="aktif" {{ $isAktif ? 'checked' : '' }}>
+                        <label class="form-check-label" for="edit_aktif{{ $diskon->id }}">
                             Aktif
                         </label>
                     </div>
@@ -174,7 +184,7 @@
                         @if($diskon->foto)
                             <div class="mt-2">
                                 <p>Foto Saat Ini:</p>
-                                <img src="/images/diskon/{{ $diskon->foto }}" style="max-width: 100px; max-height: 100px;">
+                                <img src="{{ asset('storage/' . $diskon->foto) }}"  style="max-width: 100px; max-height: 100px;">
                             </div>
                         @endif
                     </div>

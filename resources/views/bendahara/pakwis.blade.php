@@ -66,10 +66,10 @@
                             </td>
                             <td class="text-center align-middle">
                                 @if($paket->foto1)
-                                    <img src="{{ asset('images/paket-wisata/' . $paket->foto1) }}" 
-                                         width="50" height="50" 
-                                         class="img-thumbnail rounded" 
-                                         alt="{{ $paket->nama_paket }}">
+                                    <img src="{{ asset('storage/' . $paket->foto1) }}" 
+                                        width="50" height="50" 
+                                        class="img-thumbnail rounded" 
+                                        alt="{{ $paket->nama_paket }}">
                                 @else
                                     <span class="badge bg-secondary">-</span>
                                 @endif

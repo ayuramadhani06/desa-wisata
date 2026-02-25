@@ -10,6 +10,7 @@ use App\Models\PaketWisata;
 use App\Models\Diskon;
 use App\Models\JenisPembayaran;
 use App\Models\Reservasi;
+use Carbon\Carbon;
 
 use Illuminate\Support\Facades\Storage;
 
@@ -97,9 +98,7 @@ class BendaharaController extends Controller
 
         foreach (['foto1', 'foto2', 'foto3', 'foto4', 'foto5'] as $foto) {
             if ($request->hasFile($foto)) {
-                $filename = time() . '_' . $request->file($foto)->getClientOriginalName();
-                $request->file($foto)->move(public_path('images/obyek-wisata'), $filename);
-                $data[$foto] = $filename;
+                $data[$foto] = $request->file($foto)->store('obyek-wisata', 'public');
             }
         }
 
@@ -121,12 +120,14 @@ class BendaharaController extends Controller
 
         foreach (['foto1', 'foto2', 'foto3', 'foto4', 'foto5'] as $foto) {
             if ($request->hasFile($foto)) {
-                if ($obyekWisata->$foto && file_exists(public_path('images/obyek-wisata/' . $obyekWisata->$foto))) {
-                    unlink(public_path('images/obyek-wisata/' . $obyekWisata->$foto));
+
+                // Hapus foto lama
+                if ($obyekWisata->$foto) {
+                    Storage::disk('public')->delete($obyekWisata->$foto);
                 }
-                $filename = time() . '_' . $request->file($foto)->getClientOriginalName();
-                $request->file($foto)->move(public_path('images/obyek-wisata'), $filename);
-                $validated[$foto] = $filename;
+
+                // Simpan foto baru
+                $validated[$foto] = $request->file($foto)->store('obyek-wisata', 'public');
             }
         }
 
@@ -141,8 +142,8 @@ class BendaharaController extends Controller
         $obyekWisata = ObyekWisata::findOrFail($request->id);
 
         foreach (['foto1', 'foto2', 'foto3', 'foto4', 'foto5'] as $foto) {
-            if ($obyekWisata->$foto && file_exists(public_path('images/obyek-wisata/' . $obyekWisata->$foto))) {
-                unlink(public_path('images/obyek-wisata/' . $obyekWisata->$foto));
+            if ($obyekWisata->$foto) {
+                Storage::disk('public')->delete($obyekWisata->$foto);
             }
         }
 
@@ -218,9 +219,7 @@ class BendaharaController extends Controller
 
         foreach (['foto1', 'foto2', 'foto3', 'foto4', 'foto5'] as $foto) {
             if ($request->hasFile($foto)) {
-                $filename = time() . '_' . $request->file($foto)->getClientOriginalName();
-                $request->file($foto)->move(public_path('images/paket-wisata'), $filename);
-                $data[$foto] = $filename;
+                $data[$foto] = $request->file($foto)->store('paket-wisata', 'public');
             }
         }
 
@@ -243,12 +242,14 @@ class BendaharaController extends Controller
 
         foreach (['foto1', 'foto2', 'foto3', 'foto4', 'foto5'] as $foto) {
             if ($request->hasFile($foto)) {
-                if ($paketWisata->$foto && file_exists(public_path('images/paket-wisata/' . $paketWisata->$foto))) {
-                    unlink(public_path('images/paket-wisata/' . $paketWisata->$foto));
+
+                // Hapus foto lama
+                if ($paketWisata->$foto) {
+                    Storage::disk('public')->delete($paketWisata->$foto);
                 }
-                $filename = time() . '_' . $request->file($foto)->getClientOriginalName();
-                $request->file($foto)->move(public_path('images/paket-wisata'), $filename);
-                $data[$foto] = $filename;
+
+                // Simpan foto baru
+                $data[$foto] = $request->file($foto)->store('paket-wisata', 'public');
             }
         }
 
@@ -262,8 +263,8 @@ class BendaharaController extends Controller
         $paketWisata = PaketWisata::findOrFail($id);
 
         foreach (['foto1', 'foto2', 'foto3', 'foto4', 'foto5'] as $foto) {
-            if ($paketWisata->$foto && file_exists(public_path('images/paket-wisata/' . $paketWisata->$foto))) {
-                unlink(public_path('images/paket-wisata/' . $paketWisata->$foto));
+            if ($paketWisata->$foto) {
+                Storage::disk('public')->delete($paketWisata->$foto);
             }
         }
 
@@ -328,20 +329,27 @@ class BendaharaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id) //PENGINAPAN
+    public function update(Request $request, $id)
     {
         $penginapan = Penginapan::findOrFail($id);
 
-        $data = $request->validate([ 
+        $data = $request->validate([
             'nama_penginapan' => 'required|string|max:255',
             'deskripsi' => 'required',
             'fasilitas' => 'required|string|max:255',
         ]);
 
-        foreach (['foto1', 'foto2', 'foto3', 'foto4', 'foto5'] as $foto) {
+        foreach (['foto1','foto2','foto3','foto4','foto5'] as $foto) {
             if ($request->hasFile($foto)) {
+
+                // Hapus foto lama jika ada
+                if ($penginapan->$foto) {
+                    Storage::disk('public')->delete($penginapan->$foto);
+                }
+
+                // Simpan foto baru
                 $data[$foto] = $request->file($foto)->store('penginapan', 'public');
-            } 
+            }
         }
 
         $penginapan->update($data);
@@ -352,17 +360,26 @@ class BendaharaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id) //PENGINAPAN
+    public function destroy($id)
     {
         $penginapan = Penginapan::findOrFail($id);
+
+        foreach (['foto1','foto2','foto3','foto4','foto5'] as $foto) {
+            if ($penginapan->$foto) {
+                Storage::disk('public')->delete($penginapan->$foto);
+            }
+        }
+
         $penginapan->delete();
+
         return back()->with('success', 'Homestay berhasil dihapus!');
     }
 
 
-    public function diskon() //DISKON diskon
+    public function diskon()
     {
-        $diskons = Diskon::latest()->get();
+        $diskons = Diskon::latest()->get(); // ambil semua diskon, jangan filter
+
         return view('bendahara.diskon', [
             'title' => 'Diskon',
             'diskons' => $diskons
@@ -388,9 +405,7 @@ class BendaharaController extends Controller
         $data['aktif'] = $request->has('aktif') ? 1 : 0;
 
         if ($request->hasFile('foto')) {
-            $filename = time() . '_' . $request->file('foto')->getClientOriginalName();
-            $request->file('foto')->move(public_path('images/diskon'), $filename);
-            $data['foto'] = $filename;
+            $data['foto'] = $request->file('foto')->store('diskon', 'public');
         }
 
         Diskon::create($data);
@@ -420,14 +435,14 @@ class BendaharaController extends Controller
         $data['aktif'] = $request->has('aktif') ? 1 : 0;
 
         if ($request->hasFile('foto')) {
-            // Delete old photo if exists
-            if ($diskon->foto && file_exists(public_path('images/diskon/' . $diskon->foto))) {
-                unlink(public_path('images/diskon/' . $diskon->foto));
+
+            // Hapus foto lama
+            if ($diskon->foto) {
+                Storage::disk('public')->delete($diskon->foto);
             }
-            
-            $filename = time() . '_' . $request->file('foto')->getClientOriginalName();
-            $request->file('foto')->move(public_path('images/diskon'), $filename);
-            $data['foto'] = $filename;
+
+            // Simpan foto baru
+            $data['foto'] = $request->file('foto')->store('diskon', 'public');
         }
 
         $diskon->update($data);
@@ -451,8 +466,8 @@ class BendaharaController extends Controller
         $diskon = Diskon::findOrFail($id);
 
         // Delete photo if exists
-        if ($diskon->foto && file_exists(public_path('images/diskon/' . $diskon->foto))) {
-            unlink(public_path('images/diskon/' . $diskon->foto));
+        if ($diskon->foto) {
+            Storage::disk('public')->delete($diskon->foto);
         }
 
         $diskon->delete();
@@ -481,9 +496,7 @@ class BendaharaController extends Controller
         $data = $request->except(['_token', 'foto']);
 
         if ($request->hasFile('foto')) {
-            $filename = time() . '_' . $request->file('foto')->getClientOriginalName();
-            $request->file('foto')->move(public_path('images/jenispembayaran'), $filename);
-            $data['foto'] = $filename;
+            $data['foto'] = $request->file('foto')->store('jenispembayaran', 'public');
         }
 
         JenisPembayaran::create($data);
@@ -504,13 +517,14 @@ class BendaharaController extends Controller
         $data = $request->except(['_token', '_method', 'foto']);
 
         if ($request->hasFile('foto')) {
-            if ($jenisPembayaran->foto && file_exists(public_path('images/jenispembayaran/' . $jenisPembayaran->foto))) {
-                unlink(public_path('images/jenispembayaran/' . $jenisPembayaran->foto));
+
+            // Hapus foto lama
+            if ($jenisPembayaran->foto) {
+                Storage::disk('public')->delete($jenisPembayaran->foto);
             }
-            
-            $filename = time() . '_' . $request->file('foto')->getClientOriginalName();
-            $request->file('foto')->move(public_path('images/jenispembayaran'), $filename);
-            $data['foto'] = $filename;
+
+            // Simpan foto baru
+            $data['foto'] = $request->file('foto')->store('jenispembayaran', 'public');
         }
 
         $jenisPembayaran->update($data);
@@ -522,8 +536,8 @@ class BendaharaController extends Controller
     {
         $jenisPembayaran = JenisPembayaran::findOrFail($id);
 
-        if ($jenisPembayaran->foto && file_exists(public_path('images/jenispembayaran/' . $jenisPembayaran->foto))) {
-            unlink(public_path('images/jenispembayaran/' . $jenisPembayaran->foto));
+        if ($jenisPembayaran->foto) {
+            Storage::disk('public')->delete($jenisPembayaran->foto);
         }
 
         $jenisPembayaran->delete();

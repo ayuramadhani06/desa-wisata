@@ -97,7 +97,7 @@
                                     </div>
                                     @if($currentFoto)
                                         <div class="mt-2">
-                                            <img src="{{ asset('images/obyek-wisata/' . $currentFoto) }}" width="100" class="img-thumbnail">
+                                            <img src="{{ asset('storage/' . $currentFoto) }}" width="100" class="img-thumbnail">
                                         </div>
                                     @endif
                                 </div>
@@ -147,7 +147,7 @@
                                 <td>{{ Str::limit($obyek->deskripsi_wisata, 50) }}</td>
                                 <td>
                                     @if($obyek->foto1)
-                                        <img src="{{ asset('images/obyek-wisata/' . $obyek->foto1) }}" width="80" class="img-thumbnail">
+                                        <img src="{{ asset('storage/' . $obyek->foto1) }}" width="80" class="img-thumbnail">
                                     @else
                                         <span class="text-muted">Tidak ada foto</span>
                                     @endif

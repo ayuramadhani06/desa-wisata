@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
+
 
 class Diskon extends Model
 {
@@ -27,4 +29,11 @@ class Diskon extends Model
         'tanggal_berakhir' => 'date',
         'aktif' => 'boolean'
     ];
+
+    public function scopeAktifDanBerlaku($query)
+    {
+        return $query->where('aktif', 1)
+                    ->whereDate('tanggal_mulai', '<=', Carbon::today())
+                    ->whereDate('tanggal_berakhir', '>=', Carbon::today());
+    }
 }

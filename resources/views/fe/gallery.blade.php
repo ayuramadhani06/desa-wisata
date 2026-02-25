@@ -30,12 +30,12 @@
                     <div class="col-lg-4 col-md-6 col-sm-12">
                         <div class="gallery-item">
                             <div class="thumb">
-                                <img src="{{ asset('images/obyek-wisata/' . $foto) }}" 
-                                     alt="{{ $wisata->nama_wisata }}" 
-                                     class="img-fluid"
-                                     data-bs-toggle="modal" 
-                                     data-bs-target="#galleryModal"
-                                     onclick="showGalleryImage('{{ asset('images/obyek-wisata/' . $foto) }}', '{{ $wisata->nama_wisata }}')">
+                                <img src="{{ asset('storage/' . $foto) }}" 
+                                    alt="{{ $wisata->nama_wisata }}" 
+                                    class="img-fluid"
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#galleryModal"
+                                    onclick="showGalleryImage('{{ asset('storage/' . $foto) }}', '{{ $wisata->nama_wisata }}')">
                                 <div class="gallery-overlay">
                                     <h5>{{ $wisata->nama_wisata }}</h5>
                                 </div>

@@ -24,7 +24,7 @@
                 <div class="destination">
                     <div class="thumb">
                         @if($wisata->foto1)
-                            <img src="{{ asset('images/obyek-wisata/' . $wisata->foto1) }}" alt="{{ $wisata->nama_wisata }}" class="img-fluid">
+                            <img src="{{ asset('storage/' . $wisata->foto1) }}" alt="{{ $wisata->nama_wisata }}" class="img-fluid">
                         @else
                             <img src="{{ asset('fe/images/default-wisata.jpg') }}" alt="Default Image" class="img-fluid">
                         @endif
@@ -54,7 +54,7 @@
                     <!-- Foto utama -->
                     <div class="col-md-6">
                         @if($wisata->foto1)
-                            <img id="mainImage{{ $wisata->id }}" src="{{ asset('images/obyek-wisata/' . $wisata->foto1) }}" class="img-fluid mb-3 rounded shadow" alt="{{ $wisata->nama_wisata }}">
+                            <img id="mainImage{{ $wisata->id }}" src="{{ asset('storage/' . $wisata->foto1) }}" class="img-fluid mb-3 rounded shadow" alt="{{ $wisata->nama_wisata }}">
                         @endif
                     </div>
 
@@ -79,7 +79,7 @@
                         @if($wisata->$foto)
                             <div class="col-6 col-md-3 mb-3">
                                 <img 
-                                    src="{{ asset('images/obyek-wisata/' . $wisata->$foto) }}" 
+                                    src="{{ asset('storage/' . $wisata->$foto) }}" 
                                     class="img-fluid rounded shadow-sm" 
                                     alt="{{ $wisata->nama_wisata }} thumbnail"
                                     style="cursor: pointer;"

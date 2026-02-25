@@ -33,7 +33,7 @@
                             <td>{{ $jp->nomor_tf }}</td>
                             <td>
                                 @if($jp->foto)
-                                    <img src="/images/jenispembayaran/{{ $jp->foto }}" style="max-width: 100px;">
+                                    <img src="{{ asset('storage/' . $jp->foto) }}" style="max-width: 100px;">
                                 @else
                                     -
                                 @endif
@@ -115,7 +115,7 @@
                     </div>
                     <div class="form-group">
                         <label for="edit_nomor_tf{{ $jp->id }}">Nomor Rekening</label>
-                        <input type="text" class="form-control" id="edit_nomor_tf{{ $jp->id }}" name="nomor_rekening" value="{{ $jp->nomor_rekening }}">
+                        <input type="text" class="form-control" id="edit_nomor_tf{{ $jp->id }}" name="nomor_tf" value="{{ $jp->nomor_tf }}">
                     </div>
                     <div class="form-group">
                         <label for="edit_foto{{ $jp->id }}">Foto (Opsional)</label>
@@ -124,7 +124,7 @@
                         @if($jp->foto)
                             <div class="mt-2">
                                 <p>Foto Saat Ini:</p>
-                                <img src="/images/jenispembayaran/{{ $jp->foto }}" style="max-width: 100px;">
+                                <img src="{{ asset('storage/' . $jp->foto) }}" style="max-width: 100px;">
                             </div>
                         @endif
                     </div>

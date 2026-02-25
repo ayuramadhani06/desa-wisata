@@ -8,11 +8,11 @@
                 <div class="media-entry">
                     @if($diskon->foto)  
                         <a>
-                            <img src="/images/diskon/{{ $diskon->foto }}" alt="{{ $diskon->nama_diskon }}" class="img-fluid">
+                            <img src="{{ asset('storage/' . $diskon->foto) }}"  alt="{{ $diskon->nama_diskon }}" class="img-fluid">
                         </a>
                     @else
                         <a>
-                            <img src="{{ asset('images/default_discount.jpg') }}" alt="Default Discount Image" class="img-fluid">
+                            <img src="{{ asset('images/default_discount.jpg') }}"  alt="Default Discount Image" class="img-fluid">
                         </a>
                     @endif
                     <div class="bg-white m-body">

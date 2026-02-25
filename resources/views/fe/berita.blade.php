@@ -12,7 +12,7 @@
         @forelse ($beritas as $berita)
         <div class="col-md-4 mb-4">
             <div class="card h-100 shadow-sm">
-                <img src="{{ asset('images/berita/' . $berita->foto) }}" class="card-img-top" alt="foto berita">
+                <img src="{{ asset('storage/' . $berita->foto) }}" class="card-img-top" alt="foto berita" style="height: 220px; object-fit: cover;">
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">{{ $berita->judul }}</h5>
                     <p class="card-text">{{ Str::limit($berita->berita, 100) }}</p>
@@ -38,7 +38,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <img src="{{ asset('images/berita/' . $berita->foto) }}" class="img-fluid mb-3" alt="foto berita">
+                        <img src="{{ asset('storage/' . $berita->foto) }}" class="img-fluid mb-3" alt="foto berita">
                         <p>{{ $berita->berita }}</p>
                         <p class="text-muted">
                             <small>

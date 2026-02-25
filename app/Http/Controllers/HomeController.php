@@ -19,7 +19,7 @@ class HomeController extends Controller
                     ->orderBy('tgl_post', 'desc')
                     ->take(3)
                     ->get();
-        $diskons = Diskon::all();
+        $diskons = Diskon::aktifDanBerlaku()->latest()->get();
         $paketWisatas = PaketWisata::all();
         
         return view('home.index', [

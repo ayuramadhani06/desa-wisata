@@ -10,7 +10,7 @@ use App\Models\KategoriBerita;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-
+use Illuminate\Support\Facades\Storage;
 class AdminController extends Controller
 {
     /**
@@ -60,11 +60,10 @@ class AdminController extends Controller
             'foto' => 'required|image',
         ]);
 
-        $filename = null;
+        $path = null;
+
         if ($request->hasFile('foto')) {
-            $file = $request->file('foto');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('images/berita'), $filename); 
+            $path = $request->file('foto')->store('berita', 'public');
         }
 
         Berita::create([
@@ -72,7 +71,7 @@ class AdminController extends Controller
             'berita' => $request->berita,
             'tgl_post' => $request->tgl_post,
             'id_kategori_beritas' => $request->id_kategori_beritas,
-            'foto' => $filename,
+            'foto' => $path, // simpan full path
         ]);
 
         return redirect('/news')->with('success', 'Berita berhasil ditambahkan.');
@@ -94,16 +93,13 @@ class AdminController extends Controller
 
         // Handle upload foto jika ada
         if ($request->hasFile('foto')) {
-            // Hapus foto lama jika ada
-            if ($berita->foto && file_exists(public_path('images/berita/' . $berita->foto))) {
-                unlink(public_path('images/berita/' . $berita->foto));
+
+            // Hapus foto lama dari storage
+            if ($berita->foto && Storage::disk('public')->exists($berita->foto)) {
+                Storage::disk('public')->delete($berita->foto);
             }
-            
-            // Upload foto baru
-            $file = $request->file('foto');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('images/berita'), $filename);
-            $validated['foto'] = $filename;
+
+            $validated['foto'] = $request->file('foto')->store('berita', 'public');
         }
 
         // Update data berita
@@ -116,13 +112,15 @@ class AdminController extends Controller
     public function newsDelete(Request $request)
     {
         $request->validate(['id' => 'required|exists:beritas,id']);
+        
         $berita = Berita::findOrFail($request->id);
 
-        if ($berita->foto && file_exists(public_path('images/berita/' . $berita->foto))) {
-            unlink(public_path('images/berita/' . $berita->foto));
+        if ($berita->foto && Storage::disk('public')->exists($berita->foto)) {
+            Storage::disk('public')->delete($berita->foto);
         }
 
         $berita->delete();
+
         return redirect('/news')->with('success', 'Berita berhasil dihapus.');
     }
 

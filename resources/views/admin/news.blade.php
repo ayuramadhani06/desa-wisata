@@ -82,7 +82,7 @@
                         @if(isset($berita_edit))
                             <small class="text-muted">Biarkan kosong jika tidak ingin mengubah foto</small>
                             <div class="mt-2">
-                                <img src="{{ asset('images/berita/' . $berita_edit->foto) }}" width="150" class="img-thumbnail">
+                                <img src="{{ asset('storage/' . $berita_edit->foto) }}" width="150" class="img-thumbnail">
                             </div>
                         @endif
                     </div>
@@ -120,7 +120,7 @@
                             @foreach($beritas as $berita)
                             <tr>
                                 <td>
-                                    <img src="{{ asset('images/berita/' . $berita->foto) }}" width="80" class="img-thumbnail">
+                                    <img src="{{ asset('storage/' . $berita->foto) }}" width="80" class="img-thumbnail">
                                 </td>
                                 <td>
                                     <strong>{{ $berita->judul }}</strong>
