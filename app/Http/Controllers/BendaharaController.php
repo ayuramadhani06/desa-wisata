@@ -378,7 +378,13 @@ class BendaharaController extends Controller
 
     public function diskon()
     {
-        $diskons = Diskon::latest()->get(); // ambil semua diskon, jangan filter
+        $now = Carbon::now();
+
+        $diskons = Diskon::where('aktif', 1) // cuma yang ditandai aktif
+            ->whereDate('tanggal_mulai', '<=', $now)
+            ->whereDate('tanggal_berakhir', '>=', $now)
+            ->latest()
+            ->get();
 
         return view('bendahara.diskon', [
             'title' => 'Diskon',

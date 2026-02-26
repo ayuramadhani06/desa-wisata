@@ -115,13 +115,12 @@
                         <label for="foto">Foto (Opsional)</label>
                         <input type="file" class="form-control-file" id="foto" name="foto">
                     </div>
+                    @php
+                        $now = \Carbon\Carbon::now();
+                        $isAktifCheckbox = $diskon->aktif && $now->between(\Carbon\Carbon::parse($diskon->tanggal_mulai), \Carbon\Carbon::parse($diskon->tanggal_berakhir));
+                    @endphp
                     <div class="form-check">
-                        @php
-                            $now = \Carbon\Carbon::now();
-                            $isAktif = $diskon->aktif && $now->between(\Carbon\Carbon::parse($diskon->tanggal_mulai), \Carbon\Carbon::parse($diskon->tanggal_berakhir));
-                        @endphp
-
-                        <input class="form-check-input" type="checkbox" id="edit_aktif{{ $diskon->id }}" name="aktif" {{ $isAktif ? 'checked' : '' }}>
+                        <input class="form-check-input" type="checkbox" id="edit_aktif{{ $diskon->id }}" name="aktif" {{ $isAktifCheckbox ? 'checked' : '' }}>
                         <label class="form-check-label" for="edit_aktif{{ $diskon->id }}">
                             Aktif
                         </label>

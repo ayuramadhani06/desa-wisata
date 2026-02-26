@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Login</title>
+    <title>Customer - Login</title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -64,28 +64,22 @@
                                     <form class="user" method="POST" action="{{ route('loginn.store') }}" enctype="multipart/form-data">
                                         @csrf
                                         <div class="form-group">
-                                            <input type="email" class="form-control form-control-user" name="email" 
+                                            <input type="email" class="form-control form-control-user" 
+                                                name="email" 
+                                                value="{{ Cookie::get('remember_email') ?? old('email') }}"
                                                 id="exampleInputEmail" 
                                                 placeholder="Email">
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" class="form-control form-control-user" name="password"
-                                                 placeholder="Password">
+                                            <input type="password" class="form-control form-control-user" 
+                                                name="password"
+                                                placeholder="Password">
                                         </div>
-                                        {{-- <div class="form-group">
-                                            <input type="text" class="form-control form-control-user" name="text"
-                                                 placeholder="Alamat">
-                                        </div> --}}
-                                        {{-- <div class="form-group">
-                                            <label for="photo">Upload Foto</label>
-                                            <input type="file" class="form-control form-control-user" name="photo" id="photo" accept="image/*">
-                                        </div> --}}
-                                        
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
-                                                <input type="checkbox" class="custom-control-input" id="customCheck">
-                                                <label class="custom-control-label" for="customCheck">Remember
-                                                    Me</label>
+                                                <input type="checkbox" class="custom-control-input" id="customCheck" name="remember"
+                                                    {{ Cookie::get('remember_email') ? 'checked' : '' }}>
+                                                <label class="custom-control-label" for="customCheck">Remember Me</label>
                                             </div>
                                             <button type="submit" class="btn btn-primary btn-user btn-block mt-3">
                                                 Login

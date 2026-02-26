@@ -34,7 +34,7 @@
 	<link href="{{asset('be/vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
 
 
-	<title>Sterial &mdash; Free Bootstrap 5 Website Template by Untree.co </title>
+	<title>Desa Wisata Serangan </title>
 </head>
 <link rel="icon" href="{{asset('images/logo.png')}}">
 <body>

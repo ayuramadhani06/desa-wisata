@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Login</title>
+    <title>Manajemen Team - Login</title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -64,7 +64,9 @@
                                     <form class="user" method="POST" action="">
                                         @csrf
                                         <div class="form-group">
-                                            <input type="email" class="form-control form-control-user" value="{{ old('email')}}" name="email" 
+                                            <input type="email" class="form-control form-control-user" 
+                                                value="{{ Cookie::get('remember_email') ?? old('email') }}" 
+                                                name="email" 
                                                 id="exampleInputEmail" aria-describedby="emailHelp"
                                                 placeholder="Enter Email Address...">
                                         </div>
@@ -74,9 +76,9 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
-                                                <input type="checkbox" class="custom-control-input" id="customCheck">
-                                                <label class="custom-control-label" for="customCheck">Remember
-                                                    Me</label>
+                                                <input type="checkbox" class="custom-control-input" id="customCheck" name="remember"
+                                                    {{ Cookie::get('remember_email') ? 'checked' : '' }}>
+                                                <label class="custom-control-label" for="customCheck">Remember Me</label>
                                             </div>
                                             <button type="submit" class="btn btn-primary btn-user btn-block mt-3">
                                                 Login

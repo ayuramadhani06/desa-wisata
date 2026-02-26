@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Cookie;
 
 class LoginController extends Controller
 {
@@ -19,7 +20,7 @@ class LoginController extends Controller
     }
 
     function login(Request $request){
-        
+    
         $request->validate([
             'email'=> 'required',
             'password' => 'required'
@@ -34,13 +35,21 @@ class LoginController extends Controller
         ];
 
         if(Auth::attempt($infologin)){
-           if (Auth::user()->level == 'pemilik'){
+            
+            // Set cookie Remember Me selama 30 hari
+            if($request->has('remember')){
+                Cookie::queue('remember_email', $request->email, 60*24*30); // 30 hari
+            } else {
+                Cookie::queue(Cookie::forget('remember_email')); // hapus cookie kalau tidak dicentang
+            }
+
+            if (Auth::user()->level == 'pemilik'){
                 return redirect('/owner');
-           }elseif (Auth::user()->level == 'admin'){
+            }elseif (Auth::user()->level == 'admin'){
                 return redirect('/admin');
-           }elseif (Auth::user()->level == 'bendahara'){
+            }elseif (Auth::user()->level == 'bendahara'){
                 return redirect('/bendahara');
-           }
+            }
         }else{
             return redirect('/login')->withErrors('Username yang digunakan tidak sesuai')->withInput();
         }
