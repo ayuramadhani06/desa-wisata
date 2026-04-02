@@ -20,7 +20,7 @@ class ProfileController extends Controller
                 $pelanggan = new Pelanggan([
                     'user_id' => $user->id,
                     'nama_lengkap' => $user->name ?? 'Pelanggan',
-                    'no_telepon' => '',
+                    'no_hp' => '',
                     'alamat' => '',
                     'foto' => null
                 ]);
@@ -51,7 +51,7 @@ class ProfileController extends Controller
         $validated = $request->validate([
             'nama_lengkap' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,'.$user->id,
-            'no_telepon' => 'nullable|string|max:20',
+            'no_hp' => 'nullable|string|max:20',
             'alamat' => 'nullable|string|max:500',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
@@ -63,7 +63,7 @@ class ProfileController extends Controller
             // Data pelanggan
             $pelangganData = [
                 'nama_lengkap' => $validated['nama_lengkap'],
-                'no_telepon' => $validated['no_telepon'],
+                'no_hp' => $validated['no_hp'],
                 'alamat' => $validated['alamat']
                 
             ];

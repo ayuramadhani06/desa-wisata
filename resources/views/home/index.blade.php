@@ -1,22 +1,12 @@
-@extends ('fe.master')
-@section ('troon')
+@extends('fe.master')
+
+@section('content')
+
     @include('fe.troon')
-@endsection
-@section('about')
-    @include('fe.about')
-@endsection
-@section ('paketwisata')
+    @include('fe.berita')
     @include('fe.paketwisata')
-@endsection
-
-@section ('services')
     @include('fe.services')
-@endsection
-@section ('diskon')
     @include('fe.diskon')
-@endsection
-@section ('journey')
-    @include('fe.journey')
-@endsection
+    @include('fe.penginapan')
 
-
+@endsection

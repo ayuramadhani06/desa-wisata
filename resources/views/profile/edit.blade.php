@@ -1,8 +1,6 @@
-@extends('fe.master')
-@section ('troon')
-    @include('fe.troon')
+@extends('fe.profile')
 @section('content')
-<div class="container mt-5 mb-5">
+<div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card shadow">
@@ -69,11 +67,11 @@
                                 </div>
                                 
                                 <div class="form-group mb-3">
-                                    <label for="no_telepon" class="form-label">No. Telepon</label>
-                                    <input type="text" name="no_telepon" id="no_telepon" 
-                                           class="form-control @error('no_telepon') is-invalid @enderror" 
-                                           value="{{ old('no_telepon', $pelanggan->no_telepon) }}">
-                                    @error('no_telepon')
+                                    <label for="no_hp" class="form-label">No. Telepon</label>
+                                    <input type="text" name="no_hp" id="no_hp" 
+                                           class="form-control @error('no_hp') is-invalid @enderror" 
+                                           value="{{ old('no_hp', $pelanggan->no_hp) }}">
+                                    @error('no_hp')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>

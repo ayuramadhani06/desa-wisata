@@ -1,8 +1,8 @@
-@extends ('fe.master')
-@section ('troon')
-    @include('fe.troon')
-@endsection
-@section ('berita')
-    @include('fe.berita')
-@endsection
+@extends('fe.master')
 
+@section('content')
+
+    @include('fe.troon')
+    @include('fe.berita')
+
+@endsection

@@ -7,6 +7,7 @@ use App\Models\Berita;
 use App\Models\KategoriBerita;
 use App\Models\Diskon;
 use App\Models\PaketWisata;
+use App\Models\Penginapan;
 
 class HomeController extends Controller
 {
@@ -20,13 +21,15 @@ class HomeController extends Controller
                     ->take(3)
                     ->get();
         $diskons = Diskon::aktifDanBerlaku()->latest()->get();
+        $penginapans = Penginapan::latest()->get();
         $paketWisatas = PaketWisata::all();
         
         return view('home.index', [
             'title' => 'Home',
             'beritas' => $beritas,
             'diskons' => $diskons,
-            'paketwisatas' => $paketWisatas
+            'paketwisatas' => $paketWisatas,
+            'penginapans' => $penginapans
         ]);
     }
 

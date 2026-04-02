@@ -9,11 +9,11 @@ use App\Http\Controllers\{
 };
 
 // Halaman publik
-Route::resource('/', HomeController::class);
-Route::get('/penginapan', [PenginapanController::class, 'tampilPenginapan']);
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/penginapan', [PenginapanController::class, 'tampilPenginapan'])->name('penginapan.index');
 Route::get('/berita', [BeritaController::class, 'index'])->name('berita.index');
-Route::resource('/wisata', WisataController::class);
-Route::resource('/contact', ContactController::class);
+Route::get('/wisata', [WisataController::class, 'index'])->name('wisata.index');
+Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
 // Route::resource('/reservasi', ReservasiController::class);
     Route::get('/reservasi/{id}/create', [ReservasiController::class, 'create'])->name('reservasi.create');
     Route::post('/reservasi', [ReservasiController::class, 'store'])->name('reservasi.store');

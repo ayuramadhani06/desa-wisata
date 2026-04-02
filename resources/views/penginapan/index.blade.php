@@ -1,9 +1,9 @@
 @extends ('fe.master')
-@section ('troon')
+@section('content')
+
     @include('fe.troon')
-@endsection
-@section ('content')
     @include('fe.penginapan')
+
 @endsection
 
     

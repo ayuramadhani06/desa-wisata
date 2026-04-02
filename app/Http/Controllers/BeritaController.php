@@ -17,7 +17,7 @@ class BeritaController extends Controller
                     ->orderBy('tgl_post', 'desc')
                     ->paginate(8);
         
-        return view('fe.berita', [
+        return view('berita.index', [
             'title' => 'Berita',
             'beritas' => $beritas
         ]);

@@ -1,7 +1,3 @@
-@section('troon')
-	@include('fe.troon')
-@endsection
-@section('penginapan')
 <div class="container py-4">
     <h2 class="mb-4 text-center">Daftar Penginapan</h2>
     <div class="row">
@@ -96,7 +92,7 @@
         @endforelse
     </div>
 </div>
-@endsection
+
 	
 	
 	

@@ -1,10 +1,3 @@
-@extends('fe.master')
-
-@section('title', 'Berita Desa Wisata')
-@section('troon')
-	@include('fe.troon')
-@endsection
-@section('berita')
 <div class="container py-4">
     <h2 class="mb-4 text-center">Berita Desa Wisata</h2>
 
@@ -60,4 +53,3 @@
         @endforelse
     </div>
 </div>
-@endsection

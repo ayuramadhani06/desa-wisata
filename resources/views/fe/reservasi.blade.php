@@ -52,17 +52,26 @@
                             <input type="number" class="form-control" name="jumlah_peserta" min="1" required>
                         </div>
 
+                        @php
+                            $diskonsAktif = $diskons->filter(function($diskon) {
+                                $today = \Carbon\Carbon::now();
+                                return $diskon->tanggal_mulai <= $today && $diskon->tanggal_berakhir >= $today;
+                            });
+                        @endphp
+
+                        
                         <div class="mb-3">
                             <label class="form-label">Diskon</label>
                             <select class="form-control" name="id_diskon" id="diskon">
                                 <option value="">Pilih Diskon (Opsional)</option>
-                                @foreach ($diskons as $diskon)
+                                @foreach ($diskonsAktif as $diskon)
                                     <option value="{{ $diskon->id }}" data-persentase="{{ $diskon->persentase_diskon }}">
                                         {{ $diskon->nama_diskon }} ({{ $diskon->persentase_diskon }}%)
                                     </option>
                                 @endforeach
                             </select>
                         </div>
+                        
 
                         <div class="mb-3">
                             <label class="form-label">Jenis Pembayaran</label>
@@ -94,6 +103,7 @@
 
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary">Kirim Reservasi</button>
+                             <a href="{{ url('/') }}" class="btn btn-secondary mt-2">Kembali ke Beranda</a>
                         </div>
                     </form>
                 </div>
