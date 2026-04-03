@@ -52,6 +52,28 @@
                             <input type="number" class="form-control" name="jumlah_peserta" min="1" required>
                         </div>
 
+                        <div class="card mb-3 border-primary">
+                            <div class="card-body">
+                                <div class="form-check form-switch mb-2">
+                                    <input class="form-check-input" type="checkbox" id="pilihPenginapanCheck">
+                                    <label class="form-check-label fw-bold" for="pilihPenginapanCheck">Ingin menggunakan tempat ?</label>
+                                </div>
+
+                                <div id="sectionPilihPenginapan" style="display: none;">
+                                    <label class="form-label">Pilih Tempat Penginapan</label>
+                                    <select class="form-control" name="id_penginapan" id="id_penginapan">
+                                        <option value="" data-harga="0">-- Pilih Penginapan --</option>
+                                        @foreach ($penginapans as $p)
+                                            <option value="{{ $p->id }}" data-harga="{{ $p->harga_per_malam }}">
+                                                {{ $p->nama_penginapan }} (Rp {{ number_format($p->harga_per_malam, 0, ',', '.') }}/malam)
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <small class="text-info">*Harga akan dikalikan dengan jumlah malam menginap.</small>
+                                </div>
+                            </div>
+                        </div>
+
                         @php
                             $diskonsAktif = $diskons->filter(function($diskon) {
                                 $today = \Carbon\Carbon::now();
@@ -63,7 +85,7 @@
                         <div class="mb-3">
                             <label class="form-label">Diskon</label>
                             <select class="form-control" name="id_diskon" id="diskon">
-                                <option value="">Pilih Diskon (Opsional)</option>
+                                <option value="" data-persentase="0">Pilih Diskon (Opsional)</option>
                                 @foreach ($diskonsAktif as $diskon)
                                     <option value="{{ $diskon->id }}" data-persentase="{{ $diskon->persentase_diskon }}">
                                         {{ $diskon->nama_diskon }} ({{ $diskon->persentase_diskon }}%)
@@ -115,29 +137,60 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const hargaPaket = {{ $paket_wisata->harga_per_pack }};
-    const jumlahPeserta = document.querySelector('input[name="jumlah_peserta"]');
+    const jumlahPesertaInput = document.querySelector('input[name="jumlah_peserta"]');
     const diskonSelect = document.getElementById('diskon');
-    const subtotalInput = document.getElementById('subtotal');
-    const totalBayarInput = document.getElementById('total_bayar');
+    const penginapanSelect = document.getElementById('id_penginapan');
+    const checkPenginapan = document.getElementById('pilihPenginapanCheck');
+    const sectionPenginapan = document.getElementById('sectionPilihPenginapan');
+    
+    const tglMulai = document.querySelector('input[name="tgl_reservasi_wisata"]');
+    const tglSelesai = document.querySelector('input[name="tgl_selesai_reservasi"]');
+
+    // Toggle Tampilan Penginapan
+    checkPenginapan.addEventListener('change', function() {
+        if(this.checked) {
+            sectionPenginapan.style.display = 'block';
+        } else {
+            sectionPenginapan.style.display = 'none';
+            penginapanSelect.value = "";
+        }
+        hitungTotal();
+    });
 
     function hitungTotal() {
-        const jumlah = parseInt(jumlahPeserta.value) || 0;
-        const subtotal = hargaPaket * jumlah;
-        
+        const jumlah = parseInt(jumlahPesertaInput.value) || 0;
+        const subtotalPaket = hargaPaket * jumlah;
+
+        // Hitung Selisih Hari
+        let durasi = 0;
+        if (tglMulai.value && tglSelesai.value) {
+            const start = new Date(tglMulai.value);
+            const end = new Date(tglSelesai.value);
+            const diffTime = Math.abs(end - start);
+            durasi = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1;
+        }
+
+        // Harga Penginapan
+        const optPenginapan = penginapanSelect.options[penginapanSelect.selectedIndex];
+        const hargaSewa = parseFloat(optPenginapan.getAttribute('data-harga')) || 0;
+        const totalHargaPenginapan = hargaSewa * durasi;
+
+        const subtotalSeleruh = subtotalPaket + totalHargaPenginapan;
+
+        // Diskon
         const diskon = diskonSelect.options[diskonSelect.selectedIndex];
         const persenDiskon = parseFloat(diskon.getAttribute('data-persentase')) || 0;
-        const nilaiDiskon = subtotal * (persenDiskon / 100);
-        const total = subtotal - nilaiDiskon;
+        const nilaiDiskon = subtotalSeleruh * (persenDiskon / 100);
+        const total = subtotalSeleruh - nilaiDiskon;
 
-        subtotalInput.value = 'Rp ' + subtotal.toLocaleString('id-ID');
-        totalBayarInput.value = 'Rp ' + total.toLocaleString('id-ID');
+        document.getElementById('subtotal').value = 'Rp ' + subtotalSeleruh.toLocaleString('id-ID');
+        document.getElementById('total_bayar').value = 'Rp ' + total.toLocaleString('id-ID');
     }
 
-    jumlahPeserta.addEventListener('input', hitungTotal);
-    diskonSelect.addEventListener('change', hitungTotal);
-
-    // Hitung awal
-    hitungTotal();
+    [jumlahPesertaInput, diskonSelect, penginapanSelect, tglMulai, tglSelesai].forEach(el => {
+        el.addEventListener('change', hitungTotal);
+        el.addEventListener('input', hitungTotal);
+    });
 });
 </script>
 @endsection

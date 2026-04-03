@@ -29,6 +29,8 @@ class Reservasi extends Model
         'total_bayar',
         'bukti_tf',
         'status_reservasi',
+        'id_penginapan',
+        'harga_penginapan'
     ];
 
     protected $casts = [
@@ -59,6 +61,10 @@ class Reservasi extends Model
     public function jenisPembayaran()
     {
         return $this->belongsTo(JenisPembayaran::class, 'id_jenis_pembayaran');
+    }
+
+    public function penginapan() {
+        return $this->belongsTo(Penginapan::class, 'id_penginapan');
     }
 
     

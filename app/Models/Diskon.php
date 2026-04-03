@@ -36,4 +36,10 @@ class Diskon extends Model
                     ->whereDate('tanggal_mulai', '<=', Carbon::today())
                     ->whereDate('tanggal_berakhir', '>=', Carbon::today());
     }
+
+    public function getStatusBerlakuAttribute()
+    {
+        $today = Carbon::today();
+        return $this->aktif && $today->between($this->tanggal_mulai, $this->tanggal_berakhir);
+    }
 }

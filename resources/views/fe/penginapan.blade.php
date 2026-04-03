@@ -15,12 +15,15 @@
                 @endif
                 <div class="card-body">
                     <h5 class="card-title">{{ $item->nama_penginapan }}</h5>
+                    <h6 class="font-weight-bold text-success">
+                        Rp {{ number_format($item->harga_per_malam, 0, ',', '.') }} <small class="text-muted">/malam</small>
+                    </h6>
                     <p class="text-muted">Fasilitas: {{ $item->fasilitas }}</p>
                     <!-- tombol buka modal detail -->
                     <button type="button"
                             class="btn btn-primary"
                             data-bs-toggle="modal"
-                            data-bs-target="#detailModal{{ $item->id }}">
+                            data-bs-target="#detailModalPenginapan{{ $item->id }}">
                         Lihat Detail
                     </button>
                 </div>
@@ -28,7 +31,7 @@
         </div>
 
         {{-- Modal Detail untuk tiap $item --}}
-        <div class="modal fade" id="detailModal{{ $item->id }}"
+        <div class="modal fade" id="detailModalPenginapan{{ $item->id }}"
              tabindex="-1"
              aria-labelledby="detailModalLabel{{ $item->id }}"
              aria-hidden="true">
@@ -46,7 +49,7 @@
               </div>
               <div class="modal-body">
                 {{-- Carousel foto (jika ada lebih dari 1) --}}
-                <div id="carousel{{ $item->id }}" class="carousel slide mb-3" data-bs-ride="carousel">
+                <div id="carouselPenginapan{{ $item->id }}" class="carousel slide mb-3" data-bs-ride="carousel">
                   <div class="carousel-inner">
                     @for($i=1; $i<=5; $i++)
                       @php $foto = 'foto' . $i; @endphp
@@ -60,12 +63,12 @@
                     @endfor
                   </div>
                   <button class="carousel-control-prev" type="button"
-                          data-bs-target="#carousel{{ $item->id }}"
+                          data-bs-target="#carouselPenginapan{{ $item->id }}"
                           data-bs-slide="prev">
                     <span class="carousel-control-prev-icon"></span>
                   </button>
                   <button class="carousel-control-next" type="button"
-                          data-bs-target="#carousel{{ $item->id }}"
+                          data-bs-target="#carouselPenginapan{{ $item->id }}"
                           data-bs-slide="next">
                     <span class="carousel-control-next-icon"></span>
                   </button>
@@ -76,6 +79,18 @@
 
                 <p><strong>Fasilitas:</strong></p>
                 <p>{{ $item->fasilitas }}</p>
+                <div class="col-md-4">
+                    <div class="card bg-light border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <p class="mb-1 text-muted">Harga Sewa</p>
+                            <h4 class="text-success font-weight-bold mb-0">
+                                Rp {{ number_format($item->harga_per_malam, 0, ',', '.') }}
+                            </h4>
+                            <small class="text-muted">per malam</small>
+                            <hr>
+                        </div>
+                    </div>
+                </div>
               </div>
               <div class="modal-footer">
                 <button type="button"

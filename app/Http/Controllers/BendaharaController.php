@@ -290,6 +290,7 @@ class BendaharaController extends Controller
             'nama_penginapan' => 'required|string|max:255',
             'deskripsi' => 'required',
             'fasilitas' => 'required|string|max:255',
+            'harga_per_malam' => 'required|numeric',
             'foto1' => 'image|mimes:jpg,jpeg,png|max:2048',
             'foto2' => 'image|mimes:jpg,jpeg,png|max:2048',
             'foto3' => 'image|mimes:jpg,jpeg,png|max:2048',
@@ -337,6 +338,7 @@ class BendaharaController extends Controller
             'nama_penginapan' => 'required|string|max:255',
             'deskripsi' => 'required',
             'fasilitas' => 'required|string|max:255',
+            'harga_per_malam' => 'required|numeric',
         ]);
 
         foreach (['foto1','foto2','foto3','foto4','foto5'] as $foto) {
@@ -380,11 +382,7 @@ class BendaharaController extends Controller
     {
         $now = Carbon::now();
 
-        $diskons = Diskon::where('aktif', 1) // cuma yang ditandai aktif
-            ->whereDate('tanggal_mulai', '<=', $now)
-            ->whereDate('tanggal_berakhir', '>=', $now)
-            ->latest()
-            ->get();
+        $diskons = Diskon::latest()->get();
 
         return view('bendahara.diskon', [
             'title' => 'Diskon',
@@ -408,7 +406,7 @@ class BendaharaController extends Controller
         ]);
 
         $data = $request->except(['_token', 'foto']);
-        $data['aktif'] = $request->has('aktif') ? 1 : 0;
+        $data['aktif'] = 1;
 
         if ($request->hasFile('foto')) {
             $data['foto'] = $request->file('foto')->store('diskon', 'public');

@@ -9,9 +9,11 @@ use App\Models\Diskon;
 use App\Models\Pelanggan;
 use App\Models\JenisPembayaran;
 use App\Models\PaketWisata;
+use App\Models\Penginapan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class ReservasiController extends Controller
 {
@@ -43,13 +45,15 @@ class ReservasiController extends Controller
         $paketWisata = PaketWisata::findOrFail($id_paket);
         $diskons = Diskon::all();
         $jenisPembayarans = JenisPembayaran::all();
+        $penginapans = Penginapan::all();
 
         return view('reservasi.index', [
             'title' => 'Buat Reservasi',
             'paket_wisata' => $paketWisata,
             'pelanggan' => $pelanggan,
             'diskons' => $diskons,
-            'jenis_pembayarans' => $jenisPembayarans
+            'jenis_pembayarans' => $jenisPembayarans,
+            'penginapans' => $penginapans
         ]);
     }
 
@@ -59,6 +63,7 @@ class ReservasiController extends Controller
             'id_paket' => 'required|exists:paket_wisatas,id',
             'id_pelanggan' => 'required|exists:pelanggans,id',
             'id_diskon' => 'nullable|exists:diskons,id',
+            'id_penginapan' => 'nullable|exists:penginapans,id',
             'id_jenis_pembayaran' => 'required|exists:jenis_pembayarans,id',
             'tgl_reservasi_wisata' => 'required|date|after_or_equal:today',
             'tgl_selesai_reservasi' => 'required|date|after:tgl_reservasi_wisata',
@@ -68,27 +73,42 @@ class ReservasiController extends Controller
 
         $paketWisata = PaketWisata::find($request->id_paket);
         $diskon = $request->id_diskon ? Diskon::find($request->id_diskon) : null;
+        $penginapan = $request->id_penginapan ? Penginapan::find($request->id_penginapan) : null;
 
-        // Hitung harga
-        $subtotal = $paketWisata->harga_per_pack * $request->jumlah_peserta;
+        // 1. Hitung durasi menginap (selisih hari)
+        $tglMulai = Carbon::parse($request->tgl_reservasi_wisata);
+        $tglSelesai = Carbon::parse($request->tgl_selesai_reservasi);
+        $durasi = $tglMulai->diffInDays($tglSelesai) ?: 1;
+
+        // 2. Hitung harga paket
+        $subtotalPaket = $paketWisata->harga_per_pack * $request->jumlah_peserta;
+        
+        // 3. Hitung harga penginapan (jika ada)
+        $totalHargaPenginapan = $penginapan ? ($penginapan->harga_per_malam * $durasi) : 0;
+
+        // 4. Subtotal Gabungan
+        $subtotal = $subtotalPaket + $totalHargaPenginapan;
+        
+        // 5. Hitung Diskon
         $nilaiDiskon = $diskon ? ($subtotal * $diskon->persentase_diskon / 100) : 0;
         $totalBayar = $subtotal - $nilaiDiskon;
 
         // Simpan bukti transfer
         $buktiTfPath = $request->file('bukti_tf')->store('public/bukti_tf');
-        // $buktiTfPath = str_replace('public/', '', $buktiTfPath);
 
         // Buat reservasi
         $reservasi = Reservasi::create([
             'id_pelanggan' => $request->id_pelanggan,
             'id_paket' => $request->id_paket,
             'id_diskon' => $request->id_diskon,
+            'id_penginapan' => $request->id_penginapan,
             'id_jenis_pembayaran' => $request->id_jenis_pembayaran,
             'nama_pelanggan' => $request->nama_pelanggan,
             'email' => $request->email,
             'tgl_reservasi_wisata' => $request->tgl_reservasi_wisata,
             'tgl_selesai_reservasi' => $request->tgl_selesai_reservasi,
             'harga' => $paketWisata->harga_per_pack,
+            'harga_penginapan' => $totalHargaPenginapan,
             'jumlah_peserta' => $request->jumlah_peserta,
             'persentase_diskon' => $diskon ? $diskon->persentase_diskon : 0,
             'nilai_diskon' => $nilaiDiskon,

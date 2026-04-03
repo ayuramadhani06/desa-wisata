@@ -41,14 +41,18 @@
                             </td>
                             <td>
                                 @php
-                                    $now = \Carbon\Carbon::now();
-                                    $isAktif = $diskon->aktif && $now->between(\Carbon\Carbon::parse($diskon->tanggal_mulai), \Carbon\Carbon::parse($diskon->tanggal_berakhir));
+                                    $hariIni = \Carbon\Carbon::today();
+                                    $tglMulai = $diskon->tanggal_mulai;
+                                    $tglSelesai = $diskon->tanggal_berakhir;
                                 @endphp
 
-                                @if($isAktif)
+                                @if ($hariIni->between($tglMulai, $tglSelesai))
                                     <span class="badge badge-success">Aktif</span>
+                                @elseif ($hariIni->lt($tglMulai))
+                                    <span class="badge badge-info">Akan Datang</span>
+                                    <small class="d-block text-muted">Mulai dalam {{ $hariIni->diffInDays($tglMulai) }} hari</small>
                                 @else
-                                    <span class="badge badge-secondary">Nonaktif</span>
+                                    <span class="badge badge-secondary">Kedaluwarsa</span>
                                 @endif
                             </td>
                             <td>
@@ -114,16 +118,6 @@
                     <div class="form-group">
                         <label for="foto">Foto (Opsional)</label>
                         <input type="file" class="form-control-file" id="foto" name="foto">
-                    </div>
-                    @php
-                        $now = \Carbon\Carbon::now();
-                        $isAktifCheckbox = $diskon->aktif && $now->between(\Carbon\Carbon::parse($diskon->tanggal_mulai), \Carbon\Carbon::parse($diskon->tanggal_berakhir));
-                    @endphp
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="edit_aktif{{ $diskon->id }}" name="aktif" {{ $isAktifCheckbox ? 'checked' : '' }}>
-                        <label class="form-check-label" for="edit_aktif{{ $diskon->id }}">
-                            Aktif
-                        </label>
                     </div>
                 </div>
                 <div class="modal-footer">

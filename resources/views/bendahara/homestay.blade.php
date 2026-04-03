@@ -51,6 +51,9 @@
                                     {{ $p->fasilitas }}
                                 </div>
                             </div>
+                            <div class="mb-2">
+                                <h5 class="text-success font-weight-bold">Rp {{ number_format($p->harga_per_malam, 0, ',', '.') }} /malam</h5>
+                            </div>
                             <div class="d-flex gap-2 mt-3">
                                 <button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#editModal{{ $p->id }}">
                                     <i class="fas fa-edit"></i> Edit
@@ -84,6 +87,10 @@
                         <div class="form-group">
                             <label>Nama Penginapan</label>
                             <input type="text" name="nama_penginapan" class="form-control" value="{{ old('nama_penginapan', $p->nama_penginapan) }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Harga Per Malam</label>
+                            <input type="number" name="harga_per_malam" class="form-control" value="{{ old('harga_per_malam', $p->harga_per_malam) }}" required>
                         </div>
                         <div class="form-group">
                             <label>Deskripsi</label>
@@ -156,6 +163,10 @@
                 <div class="form-group">
                     <label>Nama Penginapan</label>
                     <input type="text" name="nama_penginapan" class="form-control" placeholder="Nama Penginapan" required>
+                </div>
+                <div class="form-group">
+                    <label>Harga Per Malam</label>
+                    <input type="number" name="harga_per_malam" class="form-control" placeholder="Contoh: 250000" required>
                 </div>
                 <div class="form-group">
                     <label>Deskripsi</label>
