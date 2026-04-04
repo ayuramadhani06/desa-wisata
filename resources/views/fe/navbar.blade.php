@@ -41,9 +41,11 @@
                                     <li><a class="dropdown-item" href="{{ route('reservasi.riwayat') }}">Daftar Reservasi</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
-                                        <form method="POST" action="{{ route('logoutP') }}">
+                                        <form id="logout-form-desktop" method="POST" action="{{ route('logoutP') }}">
                                             @csrf
-                                            <button type="submit" class="dropdown-item text-danger">Logout</button>
+                                            <button type="button" onclick="confirmLogout('logout-form-desktop')" class="dropdown-item text-danger">
+                                                Logout
+                                            </button>
                                         </form>
                                     </li>
                                 </ul>
@@ -110,9 +112,11 @@
             
             <a href="{{ route('profile.edit') }}" class="btn btn-outline-dark w-100 mb-2 border-secondary">Edit Profile</a>
             
-            <form method="POST" action="{{ route('logoutP') }}">
+            <form id="logout-form-mobile" method="POST" action="{{ route('logoutP') }}">
                 @csrf
-                <button type="submit" class="btn text-white w-100 fw-bold" style="background-color: #ff6a00;">Logout</button>
+                <button type="button" onclick="confirmLogout('logout-form-mobile')" class="btn text-white w-100 fw-bold" style="background-color: #ff6a00;">
+                    Logout
+                </button>
             </form>
         @else
             <a href="loginn" class="btn w-100 mb-2 fw-bold" style="border: 1px solid #ff6a00; color: #ff6a00;">Login</a>

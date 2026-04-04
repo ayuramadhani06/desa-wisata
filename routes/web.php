@@ -51,6 +51,7 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/userm/store', [AdminController::class, 'store'])->name('admin.userm.store')->middleware('userAkses:admin');
     Route::put('/userm/{id}', [AdminController::class, 'update'])->name('admin.userm.update')->middleware('userAkses:admin');
     Route::put('/userm/banned/{id}', [AdminController::class, 'banned'])->name('admin.userm.banned')->middleware('userAkses:admin');
+    Route::delete('/userm/{id}', [AdminController::class, 'destroy'])->name('admin.userm.delete');
     
     //berita managemenet
     Route::get('/news', [AdminController::class, 'con2'])->name('admin.news')->middleware('userAkses:admin');

@@ -59,10 +59,11 @@
                                 <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editDiskonModal{{ $diskon->id }}">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <form action="{{ route('bendahara.diskon.delete', $diskon->id) }}" method="POST" class="d-inline">
+
+                                <form id="delete-form-{{ $diskon->id }}" action="{{ route('bendahara.diskon.delete', $diskon->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus diskon ini?')">
+                                    <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete('delete-form-{{ $diskon->id }}')">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>

@@ -26,17 +26,6 @@
         <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary">Daftar Karyawan</h6>
-                <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown">
-                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <div class="dropdown-header">Aksi:</div>
-                        <a class="dropdown-item" href="#"><i class="fas fa-file-export mr-2"></i>Export Data</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#"><i class="fas fa-filter mr-2"></i>Filter Data</a>
-                    </div>
-                </div>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -92,11 +81,12 @@
                                         <button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#editModal{{ $karyawan->id }}" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </button>
+
                                         @if($karyawan->user && $karyawan->user->aktif)
-                                            <form action="{{ route('admin.userm.banned', $karyawan->id) }}" method="POST" class="d-inline">
+                                            <form action="{{ route('admin.userm.banned', $karyawan->id) }}" method="POST" id="form-banned-{{ $karyawan->id }}" class="d-inline">
                                                 @csrf
                                                 @method('PUT')
-                                                <button onclick="return confirm('Yakin ingin banned akun ini?')" class="btn btn-sm btn-danger" title="Banned">
+                                                <button type="button" onclick="confirmBanned('form-banned-{{ $karyawan->id }}', 'Yakin ingin banned akun ini?')" class="btn btn-sm btn-danger" title="Banned">
                                                     <i class="fas fa-ban"></i>
                                                 </button>
                                             </form>
@@ -105,6 +95,16 @@
                                                 <i class="fas fa-ban"></i>
                                             </button>
                                         @endif
+
+                                        <form action="{{ route('admin.userm.delete', $karyawan->id) }}" method="POST" id="form-delete-{{ $karyawan->id }}" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button" class="btn btn-sm btn-dark" 
+                                                onclick="confirmDelete('form-delete-{{ $karyawan->id }}', 'Menghapus karyawan akan menghapus akun login secara permanen!')" 
+                                                title="Hapus Permanen">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>
@@ -215,14 +215,25 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="{{ route('admin.store') }}" method="POST">
+                    
+                    <form action="{{ route('admin.store') }}" method="POST" autocomplete="off">
                         @csrf
                         <div class="modal-body">
+                            @if ($errors->any())
+                                <div class="alert alert-danger py-2">
+                                    <ul class="mb-0" style="font-size: 0.85rem;">
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="font-weight-bold">Nama Karyawan</label>
-                                        <input type="text" name="nama_karyawan" class="form-control" placeholder="Masukkan nama lengkap" required>
+                                        <input type="text" name="nama_karyawan" class="form-control" placeholder="Masukkan nama lengkap" value="{{ old('nama_karyawan') }}" required>
                                     </div>
                                     <div class="form-group">
                                         <label class="font-weight-bold">Email</label>
@@ -230,7 +241,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                                             </div>
-                                            <input type="email" name="email" class="form-control" placeholder="contoh@email.com" required>
+                                            <input type="email" name="email" class="form-control" placeholder="contoh@email.com" autocomplete="none" value="{{ old('email') }}" required>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -239,14 +250,14 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-lock"></i></span>
                                             </div>
-                                            <input type="password" name="password" class="form-control" placeholder="Minimal 6 karakter" required>
+                                            <input type="password" name="password" class="form-control" placeholder="Minimal 6 karakter" autocomplete="new-password" required>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="font-weight-bold">Alamat</label>
-                                        <textarea name="alamat" class="form-control" rows="2" placeholder="Masukkan alamat lengkap" required></textarea>
+                                        <textarea name="alamat" class="form-control" rows="2" placeholder="Masukkan alamat lengkap" required>{{ old('alamat') }}</textarea>
                                     </div>
                                     <div class="form-group">
                                         <label class="font-weight-bold">No HP</label>
@@ -254,16 +265,16 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-phone-alt"></i></span>
                                             </div>
-                                            <input type="text" name="no_hp" class="form-control" placeholder="Contoh: 08123456789" required>
+                                            <input type="text" name="no_hp" class="form-control" placeholder="Contoh: 08123456789" value="{{ old('no_hp') }}" required>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="font-weight-bold">Jabatan</label>
-                                        <select name="jabatan" class="form-control selectpicker" required>
+                                        <select name="jabatan" class="form-control" required>
                                             <option value="">-- Pilih Jabatan --</option>
-                                            <option value="administrasi">Administrasi</option>
-                                            <option value="bendahara">Bendahara</option>
-                                            <option value="pemilik">Pemilik</option>
+                                            <option value="administrasi" {{ old('jabatan') == 'administrasi' ? 'selected' : '' }}>Administrasi</option>
+                                            <option value="bendahara" {{ old('jabatan') == 'bendahara' ? 'selected' : '' }}>Bendahara</option>
+                                            <option value="pemilik" {{ old('jabatan') == 'pemilik' ? 'selected' : '' }}>Pemilik</option>
                                         </select>
                                     </div>
                                 </div>

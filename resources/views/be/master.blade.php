@@ -110,6 +110,55 @@
     <!-- Page level custom scripts -->
     <script src="{{asset('be/js/demo/chart-area-demo.js')}}"></script>
     <script src="{{asset('be/js/demo/chart-pie-demo.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        // Fungsi Global untuk Konfirmasi Hapus
+        function confirmDelete(formId) {
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Data yang dihapus tidak dapat dikembalikan!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#e74a3b', // Warna merah ala SB Admin 2
+                cancelButtonColor: '#858796',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(formId).submit();
+                }
+            })
+        }
+
+        function confirmBanned(formId) {
+            Swal.fire({
+                title: 'Yakin ingin banned?',
+                text: "Akun ini tidak akan bisa login untuk sementara waktu.",
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#f6c23e',
+                cancelButtonColor: '#858796',
+                confirmButtonText: 'Ya, Banned!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(formId).submit();
+                }
+            });
+        }
+        // Munculkan notifikasi sukses dari session Laravel
+        @if(session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: "{{ session('success') }}",
+                timer: 3000,
+                showConfirmButton: false
+            });
+        @endif
+    </script>
 
 </body>
 

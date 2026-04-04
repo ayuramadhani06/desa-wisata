@@ -21,8 +21,18 @@ class BendaharaController extends Controller
      */
     public function index()
     {
+        // Hitung ringkasan data
+        $stats = [
+            'perlu_konfirmasi' => Reservasi::where('status_reservasi', 'Dipesan')->count(),
+            'total_homestay'   => Penginapan::count(),
+            'total_paket'      => PaketWisata::count(),
+            'diskon_aktif'     => Diskon::where('aktif', 1)->count(),
+            // Contoh hitung total uang masuk (asumsi ada kolom total_harga di tabel reservasi)
+            'total_pendapatan' => Reservasi::whereIn('status_reservasi', ['Dibayar', 'Selesai'])->sum('total_bayar') 
+        ];
         return view('bendahara.index', [
-            'title' => 'Bendahara' 
+            'title' => 'Bendahara',
+            'stats' => $stats
         ]);
     }
 

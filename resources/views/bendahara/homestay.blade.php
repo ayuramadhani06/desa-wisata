@@ -58,9 +58,10 @@
                                 <button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#editModal{{ $p->id }}">
                                     <i class="fas fa-edit"></i> Edit
                                 </button>
-                                <form action="{{ route('homestay.destroy', $p->id) }}" method="POST" onsubmit="return confirm('Yakin hapus?')">
-                                    @csrf @method('DELETE')
-                                    <button class="btn btn-sm btn-danger">
+                                <form id="delete-form-{{ $p->id }}" action="{{ route('homestay.destroy', $p->id) }}" method="POST" style="display: inline;">
+                                    @csrf 
+                                    @method('DELETE')
+                                    <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete('delete-form-{{ $p->id }}')">
                                         <i class="fas fa-trash"></i> Hapus
                                     </button>
                                 </form>

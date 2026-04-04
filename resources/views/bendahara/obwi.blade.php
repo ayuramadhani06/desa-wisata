@@ -157,11 +157,11 @@
                                         <a href="{{ route('bendahara.obwi.edit', $obyek->id) }}" class="btn btn-sm btn-warning" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <form action="{{ route('bendahara.obwi.delete') }}" method="POST">
+
+                                        <form id="delete-form-{{ $obyek->id }}" action="{{ route('bendahara.obwi.delete') }}" method="POST" style="display: inline;">
                                             @csrf
-                                            @method('POST')
                                             <input type="hidden" name="id" value="{{ $obyek->id }}">
-                                            <button type="submit" class="btn btn-sm btn-danger" title="Hapus" onclick="return confirm('Apakah Anda yakin ingin menghapus objek wisata ini?')">
+                                            <button type="button" class="btn btn-sm btn-danger" title="Hapus" onclick="confirmDelete('delete-form-{{ $obyek->id }}')">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </form>

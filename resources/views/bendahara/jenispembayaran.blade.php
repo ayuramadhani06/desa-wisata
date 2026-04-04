@@ -42,10 +42,11 @@
                                 <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editJenisPembayaranModal{{ $jp->id }}">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <form action="{{ route('bendahara.jenispembayaran.delete', $jp->id) }}" method="POST" class="d-inline">
+
+                                <form id="delete-form-{{ $jp->id }}" action="{{ route('bendahara.jenispembayaran.delete', $jp->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus jenis pembayaran ini?')">
+                                    <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete('delete-form-{{ $jp->id }}')">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>

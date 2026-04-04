@@ -18,11 +18,23 @@ class AdminController extends Controller
      */
     public function index()
     {
-        return view ('admin.index', [
-            'title' => 'Admin'
+        // Mengambil jumlah total untuk statistik dashboard
+        $totalKaryawan = Karyawan::count();
+        $totalBerita = Berita::count();
+        $totalKategori = KategoriBerita::count();
+
+        // Opsional: Ambil 5 berita terbaru untuk ditampilkan di dashboard
+        $recentNews = Berita::with('kategori')->latest()->take(5)->get();
+
+        return view('admin.index', [
+            'title' => 'Admin Dashboard',
+            'totalKaryawan' => $totalKaryawan,
+            'totalBerita' => $totalBerita,
+            'totalKategori' => $totalKategori,
+            'recentNews' => $recentNews
         ]);
     }
-
+    
     function con1()
     {
         $karyawans = Karyawan::with('user')->get();
@@ -320,6 +332,30 @@ class AdminController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect('/userm')->with('error', 'Gagal melakukan banned: ' . $e->getMessage());
+        }
+    }
+
+    public function destroy(string $id)
+    {
+        try {
+            DB::beginTransaction();
+            
+            $karyawan = Karyawan::findOrFail($id);
+            
+            // Hapus User terkait terlebih dahulu (jika ada)
+            if ($karyawan->id_user) {
+                User::where('id', $karyawan->id_user)->delete();
+            }
+            
+            // Hapus data Karyawan
+            $karyawan->delete();
+            
+            DB::commit();
+            
+            return redirect('/userm')->with('success', 'Data karyawan dan akun berhasil dihapus permanen.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect('/userm')->with('error', 'Gagal menghapus data: ' . $e->getMessage());
         }
     }
 }

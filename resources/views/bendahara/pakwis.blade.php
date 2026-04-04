@@ -81,9 +81,14 @@
                                             data-bs-target="#editModal{{ $paket->id }}">
                                         <i class="fas fa-edit"></i>
                                     </button>
+
+                                    <form id="delete-form-{{ $paket->id }}" action="{{ route('bendahara.pakwis.delete', $paket->id) }}" method="POST" style="display: none;">
+                                        @csrf
+                                        @method('DELETE')
+                                    </form>
+
                                     <button type="button" class="btn btn-sm btn-outline-danger" 
-                                            data-bs-toggle="modal" 
-                                            data-bs-target="#deleteModal{{ $paket->id }}">
+                                            onclick="confirmDelete('delete-form-{{ $paket->id }}')">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </div>
