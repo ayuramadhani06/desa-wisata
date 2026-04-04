@@ -59,27 +59,12 @@
 
                 </div>
             </div>
-            <div class="col-lg-8" data-aos="fade-up" data-aos-delay="200">
-                <form action="#">
-                    <div class="row">
-                        <div class="col-6 mb-3">
-                            <input type="text" class="form-control" placeholder="Your Name">
-                        </div>
-                        <div class="col-6 mb-3">
-                            <input type="email" class="form-control" placeholder="Your Email">
-                        </div>
-                        <div class="col-12 mb-3">
-                            <input type="text" class="form-control" placeholder="Subject">
-                        </div>
-                        <div class="col-12 mb-3">
-                            <textarea name="" id="" cols="30" rows="7" class="form-control" placeholder="Message"></textarea>
-                        </div>
-
-                        <div class="col-12">
-                            <input type="submit" value="Send Message" class="btn btn-primary">
-                        </div>
-                    </div>
-                </form>
+            <div class="col-lg-8 text-center" data-aos="fade-up" data-aos-delay="200">
+                <div class="py-5">
+                    <h3>Punya pertanyaan lebih lanjut?</h3>
+                    <p>Klik tombol di bawah untuk mengirim email langsung kepada kami.</p>
+                    <a href="mailto:adityaayoe06@gmail.com?subject=Tanya Desa Wisata" class="btn btn-primary">Kirim Email Sekarang</a>
+                </div>
             </div>
         </div>
     </div>

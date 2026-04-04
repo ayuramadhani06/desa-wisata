@@ -26,16 +26,16 @@
 
 </head>
 <link rel="icon" href="{{asset('images/logo.png')}}">
-<body id="page-top">
+<body id="page-top" style="height: 100vh; overflow: hidden;">
 
     <!-- Page Wrapper -->
-    <div id="wrapper">
+    <div id="wrapper" style="height: 100vh; overflow: hidden;">
 
         @yield('sidebar')
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
-        <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content-wrapper" class="d-flex flex-column" style="overflow-y: auto;">
 
             <!-- Main Content -->
             <div id="content">

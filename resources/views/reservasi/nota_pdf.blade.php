@@ -87,6 +87,9 @@
         <p><strong>Nama Pelanggan:</strong> {{ $reservasi->nama_pelanggan }}</p>
         <p><strong>Email:</strong> {{ $reservasi->email }}</p>
         <p><strong>Paket Wisata:</strong> {{ $reservasi->paketWisata->nama_paket }}</p>
+        
+        <p><strong>Penginapan:</strong> {{ $reservasi->penginapan->nama_penginapan ?? 'Tidak ada penginapan' }}</p>
+        
         <p><strong>Tanggal Reservasi:</strong> {{ \Carbon\Carbon::parse($reservasi->tgl_reservasi_wisata)->format('d F Y') }} s.d. {{ \Carbon\Carbon::parse($reservasi->tgl_selesai_reservasi)->format('d F Y') }}</p>
         <p><strong>Metode Pembayaran:</strong> {{ $reservasi->jenisPembayaran->jenis_pembayaran }}</p>
         <p><strong>Status Reservasi:</strong> {{ ucfirst($reservasi->status_reservasi) }}</p>
@@ -95,26 +98,53 @@
     <table>
         <thead>
             <tr>
-                <th>Harga per Peserta</th>
-                <th>Jumlah Peserta</th>
+                <th>Rincian Layanan</th> <th>Harga/Unit</th>
+                <th>Qty/Durasi</th>
                 <th>Subtotal</th>
-                <th>Diskon</th>
-                <th>Total Bayar</th>
             </tr>
         </thead>
         <tbody>
             <tr>
+                <td>Paket: {{ $reservasi->paketWisata->nama_paket }}</td>
                 <td>Rp {{ number_format($reservasi->harga, 0, ',', '.') }}</td>
-                <td>{{ $reservasi->jumlah_peserta }}</td>
-                <td>Rp {{ number_format($reservasi->subtotal, 0, ',', '.') }}</td>
+                <td>{{ $reservasi->jumlah_peserta }} Orang</td>
+                <td>Rp {{ number_format($reservasi->harga * $reservasi->jumlah_peserta, 0, ',', '.') }}</td>
+            </tr>
+
+            @if($reservasi->id_penginapan)
+            <tr>
+                <td>Penginapan: {{ $reservasi->penginapan->nama_penginapan }}</td>
                 <td>
-                    @if($reservasi->diskon)
-                        {{ $reservasi->persentase_diskon }}% (Rp {{ number_format($reservasi->nilai_diskon, 0, ',', '.') }})
+                    @php
+                        $tglMulai = \Carbon\Carbon::parse($reservasi->tgl_reservasi_wisata);
+                        $tglSelesai = \Carbon\Carbon::parse($reservasi->tgl_selesai_reservasi);
+                        $durasi = $tglMulai->diffInDays($tglSelesai) ?: 1;
+                        $hargaPerMalam = $reservasi->penginapan->harga_per_malam;
+                    @endphp
+                    Rp {{ number_format($hargaPerMalam, 0, ',', '.') }}
+                </td>
+                <td>{{ $durasi }} Malam</td>
+                <td>Rp {{ number_format($reservasi->harga_penginapan, 0, ',', '.') }}</td>
+            </tr>
+            @endif
+
+            <tr>
+                <td colspan="3" style="text-align: right;"><strong>Total Harga</strong></td>
+                <td>Rp {{ number_format($reservasi->subtotal, 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <td colspan="3" style="text-align: right;"><strong>Diskon</strong></td>
+                <td>
+                    @if($reservasi->nilai_diskon > 0)
+                        - Rp {{ number_format($reservasi->nilai_diskon, 0, ',', '.') }} ({{ $reservasi->persentase_diskon }}%)
                     @else
-                        -
+                        0
                     @endif
                 </td>
-                <td class="total">Rp {{ number_format($reservasi->total_bayar, 0, ',', '.') }}</td>
+            </tr>
+            <tr class="total">
+                <td colspan="3" style="text-align: right;"><strong>Total Bayar</strong></td>
+                <td>Rp {{ number_format($reservasi->total_bayar, 0, ',', '.') }}</td>
             </tr>
         </tbody>
     </table>

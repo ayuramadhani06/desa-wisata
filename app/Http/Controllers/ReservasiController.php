@@ -153,7 +153,7 @@ class ReservasiController extends Controller
 
     public function downloadNota($id)
     {
-        $reservasi = Reservasi::with(['paketWisata', 'pelanggan', 'diskon', 'jenisPembayaran'])->findOrFail($id);
+        $reservasi = Reservasi::with(['paketWisata', 'pelanggan', 'diskon', 'jenisPembayaran', 'penginapan'])->findOrFail($id);
 
         // Validasi bahwa hanya pemilik yang boleh download
         if ($reservasi->pelanggan->id_user !== Auth::id()) {

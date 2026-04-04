@@ -50,7 +50,7 @@ class BendaharaController extends Controller
     public function updateStatusReservasi(Request $request, $id)
     {
         $request->validate([
-            'status' => 'required|in:Dipesan,Dibayar,Selesai,Dibatalkan'
+            'status' => 'required|in:Dipesan,Dibayar,Selesai'
         ]);
 
         $reservasi = Reservasi::findOrFail($id);
