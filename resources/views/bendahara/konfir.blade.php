@@ -18,6 +18,47 @@
                     <span class="badge bg-light text-dark">{{ $reservasis->count() }} Total Pesanan</span>
                 </div>
                 <div class="card-body px-0 pt-0 pb-2">
+                    <form method="GET" action="{{ route('bendahara.konfir') }}" class="mb-4 px-4 mt-3">
+                        <div class="row">
+
+                            {{-- FILTER TANGGAL --}}
+                            <div class="col-md-3">
+                                <label>Tanggal Wisata</label>
+                                <input type="date" name="filter_date" class="form-control"
+                                    value="{{ request('filter_date') }}">
+                            </div>
+
+                            {{-- SEARCH NAMA --}}
+                            <div class="col-md-3">
+                                <label>Nama Pelanggan</label>
+                                <input type="text" name="search" class="form-control"
+                                    placeholder="Cari nama..."
+                                    value="{{ request('search') }}">
+                            </div>
+
+                            {{-- FILTER STATUS --}}
+                            <div class="col-md-3">
+                                <label>Status</label>
+                                <select name="status" class="form-control">
+                                    <option value="">-- Semua Status --</option>
+                                    <option value="Dipesan" {{ request('status') == 'Dipesan' ? 'selected' : '' }}>Dipesan</option>
+                                    <option value="Dibayar" {{ request('status') == 'Dibayar' ? 'selected' : '' }}>Dibayar</option>
+                                    <option value="Selesai" {{ request('status') == 'Selesai' ? 'selected' : '' }}>Selesai</option>
+                                </select>
+                            </div>
+
+                            {{-- BUTTON --}}
+                            <div class="col-md-3 d-flex align-items-end">
+                                <button type="submit" class="btn btn-primary mr-2">
+                                    <i class="fas fa-search"></i> Filter
+                                </button>
+                                <a href="{{ route('bendahara.konfir') }}" class="btn btn-secondary">
+                                    Reset
+                                </a>
+                            </div>
+
+                        </div>
+                    </form>
                     <div class="table-responsive p-0">
                         <table class="table table-hover align-items-center mb-0">
                             <thead class="bg-light">

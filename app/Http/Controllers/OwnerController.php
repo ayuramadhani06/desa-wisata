@@ -15,31 +15,59 @@ class OwnerController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Total pemasukan bulan ini
-        $monthlyIncome = Reservasi::whereMonth('created_at', now()->month)
+        // ========================
+        // FILTER TANGGAL
+        // ========================
+        $start = $request->start_date;
+        $end   = $request->end_date;
+
+        $query = Reservasi::query();
+
+        if ($start && $end) {
+            $query->whereBetween('created_at', [$start, $end]);
+        }
+
+        // ========================
+        // PEMASUKAN
+        // ========================
+        $monthlyIncome = (clone $query)
+            ->whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
             ->sum('total_bayar');
 
-        // Total pemasukan tahun ini
-        $yearlyIncome = Reservasi::whereYear('created_at', now()->year)
+        $yearlyIncome = (clone $query)
+            ->whereYear('created_at', now()->year)
             ->sum('total_bayar');
 
-        // Pelanggan yang pernah reservasi
+        // ========================
+        // CUSTOMER
+        // ========================
         $customers = Pelanggan::whereIn('id', Reservasi::pluck('id_pelanggan')->unique())
             ->withCount('reservasis')
             ->orderBy('reservasis_count', 'desc')
             ->limit(5)
             ->get();
 
-        // Data reservasi terbaru
-        $latestReservations = Reservasi::with(['pelanggan', 'paketWisata'])
+        $totalReservasi = (clone $query)->count();
+
+        // ========================
+        // RESERVASI TERBARU
+        // ========================
+        $latestReservations = $query->with(['pelanggan', 'paketWisata'])
             ->latest()
-            ->limit(10)
             ->get();
 
-        // Statistik bulanan
+        // ========================
+        // TAMBAHAN DATA BARU 🔥
+        // ========================
+        $paketWisatas = PaketWisata::latest()->limit(5)->get();
+        $obyekWisatas = \App\Models\ObyekWisata::latest()->limit(5)->get();
+
+        // ========================
+        // STATISTIK
+        // ========================
         $monthlyStats = $this->getMonthlyStats();
 
         return view('owner.index', [
@@ -48,7 +76,15 @@ class OwnerController extends Controller
             'yearlyIncome' => $yearlyIncome,
             'customers' => $customers,
             'reservations' => $latestReservations,
-            'monthlyStats' => $monthlyStats
+            'monthlyStats' => $monthlyStats,
+
+            // kirim ke blade
+            'paketWisatas' => $paketWisatas,
+            'obyekWisatas' => $obyekWisatas,
+            'totalReservasi' => $totalReservasi,
+
+            'start' => $start,
+            'end' => $end
         ]);
     }
 
@@ -79,15 +115,34 @@ class OwnerController extends Controller
             'incomes' => array_reverse(array_column($stats, 'income'))
         ];
     }
-    public function exportPdf()
+
+    public function exportPdf(Request $request)
     {
-        $reservations = Reservasi::with(['pelanggan', 'paketWisata'])
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $start = $request->start_date;
+        $end   = $request->end_date;
 
-        $pdf = PDF::loadView('owner.report_pdf', ['reservations' => $reservations]);
+        $query = Reservasi::with([
+            'pelanggan',
+            'paketWisata',
+            'diskon',
+            'penginapan',
+            'jenisPembayaran'
+        ]);
 
-        return $pdf->download('laporan_reservasi_'.now()->format('Ymd_His').'.pdf');
+        // 🔥 FILTER IKUT DASHBOARD
+        if ($start && $end) {
+            $query->whereBetween('created_at', [$start, $end]);
+        }
+
+        $reservations = $query->orderBy('created_at', 'desc')->get();
+
+        $pdf = PDF::loadView('owner.report_pdf', [
+            'reservations' => $reservations,
+            'start' => $start,
+            'end' => $end
+        ]);
+
+        return $pdf->download('laporan_reservasi_' . now()->format('Ymd_His') . '.pdf');
     }
 
     /**

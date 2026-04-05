@@ -7,182 +7,217 @@
 @endsection
 @section('content')
     <div class="container-fluid">
-        <h1 class="h3 mb-4 text-gray-800">Dashboard Owner</h1>
 
-    <!-- Welcome Card --> 
-    <div class="alert alert-primary shadow-sm">
-        <h5 class="mb-1">Selamat Datang, Owner!</h5>
-        <p class="mb-0">Semoga harimu menyenangkan 🎉 —</p>
-    </div>
-    
-                <a href="{{ route('owner.reservasi.pdf') }}" target="_blank" class="btn btn-danger mt-5 mb-4">
-                    <i class="fas fa-file-pdf"></i> Unduh Laporan
-                </a>
+        <!-- TITLE -->
+        <h1 class="h3 mb-3 text-gray-800">Dashboard Owner</h1>
 
-        <!-- Cards Row -->
+        <!-- WELCOME -->
+        <div class="alert alert-primary shadow-sm mb-4">
+            <h5 class="mb-1">Selamat Datang, Owner!</h5>
+            <small>Semoga harimu menyenangkan 🎉</small>
+        </div>
+
+        <!-- FILTER + ACTION -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <form method="GET">
+                    <div class="row align-items-end">
+
+                        <div class="col-md-3">
+                            <label>Dari Tanggal</label>
+                            <input type="date" name="start_date" value="{{ request('start_date') }}" class="form-control">
+                        </div>
+
+                        <div class="col-md-3">
+                            <label>Sampai Tanggal</label>
+                            <input type="date" name="end_date" value="{{ request('end_date') }}" class="form-control">
+                        </div>
+
+                        <div class="col-md-3">
+                            <button class="btn btn-primary w-100">
+                                <i class="fas fa-filter"></i> Filter
+                            </button>
+                        </div>
+
+                        <div class="col-md-3 d-flex gap-3 mt-2 mt-md-0 justify-content-md-end">
+                            <a href="{{ route('owner.index') }}" class="btn btn-secondary">
+                                Reset
+                            </a>
+
+                            <a href="{{ route('owner.reservasi.pdf', ['start_date' => request('start_date'),'end_date' => request('end_date')]) }}" target="_blank" class="btn btn-danger">
+                                <i class="fas fa-file-pdf"></i> Unduh Laporan
+                            </a>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- STATS -->
         <div class="row">
-            <!-- Monthly Income Card -->
-            <div class="col-xl-3 col-md-6 mb-4">
+
+            <div class="col-xl-4 col-md-6 mb-4">
                 <div class="card border-left-primary shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                    Pemasukan Bulan Ini</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">Rp{{ number_format($monthlyIncome, 0, ',', '.') }}</div>
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Pemasukan Bulan Ini
                             </div>
-                            <div class="col-auto">
-                                <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                            <div class="h5 font-weight-bold text-gray-800">
+                                Rp{{ number_format($monthlyIncome, 0, ',', '.') }}
                             </div>
                         </div>
+                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
                     </div>
                 </div>
             </div>
 
-            <!-- Yearly Income Card -->
-            <div class="col-xl-3 col-md-6 mb-4">
+            <div class="col-xl-4 col-md-6 mb-4">
                 <div class="card border-left-success shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                    Pemasukan Tahun Ini</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">Rp{{ number_format($yearlyIncome, 0, ',', '.') }}</div>
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Pemasukan Tahun Ini
                             </div>
-                            <div class="col-auto">
-                                <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                            <div class="h5 font-weight-bold text-gray-800">
+                                Rp{{ number_format($yearlyIncome, 0, ',', '.') }}
                             </div>
                         </div>
+                        <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
                     </div>
                 </div>
             </div>
 
-            <!-- Reservations Count Card -->
-            <div class="col-xl-3 col-md-6 mb-4">
+            <div class="col-xl-4 col-md-6 mb-4">
                 <div class="card border-left-info shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                    Total Reservasi Bulan Ini</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    {{ $monthlyStats['counts'][count($monthlyStats['counts'])-1] }}
-                                </div>
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Total Reservasi
                             </div>
-                            <div class="col-auto">
-                                <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                            <div class="h5 font-weight-bold text-gray-800">
+                                {{ $totalReservasi }}
                             </div>
                         </div>
+                        <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
                     </div>
                 </div>
             </div>
 
-            <!-- Top Customers Card -->
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-warning shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                    Pelanggan Aktif</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $customers->count() }}</div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-users fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
 
-        <!-- Charts Row -->
+        <!-- PAKET & OBYEK -->
         <div class="row">
-            <!-- Monthly Income Chart -->
-            <!-- <div class="col-xl-8 col-lg-7">
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Statistik Pemasukan 12 Bulan Terakhir</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="chart-area">
-                            <canvas id="incomeChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
 
-            <!-- Top Customers -->
-            <div class="col-xl-4 col-lg-5">
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Pelanggan Teraktif</h6>
+            <!-- PAKET -->
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow h-100">
+                    <div class="card-header">
+                        <h6 class="m-0 font-weight-bold text-primary">Paket Wisata</h6>
                     </div>
                     <div class="card-body">
-                        @foreach($customers as $customer)
-                        <div class="mb-3">
-                            <div class="d-flex justify-content-between">
-                                <span class="font-weight-bold">{{ $customer->nama_lengkap }}</span>
-                                <span class="badge badge-primary">{{ $customer->reservasis_count }} reservasi</span>
+
+                        @forelse($paketWisatas as $paket)
+                            <div class="border-bottom pb-2 mb-2">
+                                <div class="font-weight-bold">{{ $paket->nama_paket }}</div>
+                                <small class="text-success">
+                                    Rp{{ number_format($paket->harga_per_pack,0,',','.') }}
+                                </small>
                             </div>
-                            <div class="small text-gray-500">{{ $customer->email }}</div>
-                        </div>
-                        @endforeach
+                        @empty
+                            <small class="text-muted">Belum ada data</small>
+                        @endforelse
+
                     </div>
+                </div>
+            </div>
+
+            <!-- OBYEK -->
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow h-100">
+                    <div class="card-header">
+                        <h6 class="m-0 font-weight-bold text-primary">Objek Wisata</h6>
+                    </div>
+                    <div class="card-body">
+
+                        @forelse($obyekWisatas as $obyek)
+                            <div class="border-bottom pb-2 mb-2">
+                                <div class="font-weight-bold">{{ $obyek->nama_wisata }}</div>
+                                <small class="text-muted">
+                                    {{ Str::limit($obyek->deskripsi_wisata, 60) }}
+                                </small>
+                            </div>
+                        @empty
+                            <small class="text-muted">Belum ada data</small>
+                        @endforelse
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- TABLE -->
+        <div class="card shadow mb-4">
+            <div class="card-header">
+                <h6 class="m-0 font-weight-bold text-primary">Reservasi Terbaru</h6>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered align-middle">
+
+                        <thead class="thead-light text-center">
+                            <tr>
+                                <th>#</th>
+                                <th>Pelanggan</th>
+                                <th>Paket</th>
+                                <th>Tanggal</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach($reservations as $reservation)
+                            <tr>
+                                <td class="text-center">{{ $loop->iteration }}</td>
+
+                                <td>{{ $reservation->pelanggan->nama_lengkap }}</td>
+
+                                <td>{{ $reservation->paketWisata->nama_paket }}</td>
+
+                                <td class="text-center">
+                                    {{ $reservation->tgl_reservasi_wisata->format('d/m/Y') }} <br>
+                                    <small class="text-muted">s/d</small><br>
+                                    {{ $reservation->tgl_selesai_reservasi->format('d/m/Y') }}
+                                </td>
+
+                                <td class="text-success font-weight-bold">
+                                    Rp{{ number_format($reservation->total_bayar, 0, ',', '.') }}
+                                </td>
+
+                                <td class="text-center">
+                                    <span class="badge 
+                                        @if($reservation->status_reservasi == 'Dipesan') badge-warning
+                                        @elseif($reservation->status_reservasi == 'Dibayar') badge-primary
+                                        @elseif($reservation->status_reservasi == 'Selesai') badge-success
+                                        @else badge-danger
+                                        @endif">
+                                        {{ $reservation->status_reservasi }}
+                                    </span>
+                                </td>
+
+                            </tr>
+                            @endforeach
+                        </tbody>
+
+                    </table>
                 </div>
             </div>
         </div>
 
-        <!-- Recent Reservations -->
-        <div class="row">
-            <div class="col-12">
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Reservasi Terbaru</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Pelanggan</th>
-                                        <th>Paket Wisata</th>
-                                        <th>Tanggal</th>
-                                        <th>Total Bayar</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($reservations as $reservation)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $reservation->pelanggan->nama_lengkap }}</td>
-                                        <td>{{ $reservation->paketWisata->nama_paket }}</td>
-                                        <td>
-                                            {{ $reservation->tgl_reservasi_wisata->format('d/m/Y') }} - 
-                                            {{ $reservation->tgl_selesai_reservasi->format('d/m/Y') }}
-                                        </td>
-                                        <td>Rp{{ number_format($reservation->total_bayar, 0, ',', '.') }}</td>
-                                        <td>
-                                            <span class="badge 
-                                                @if($reservation->status_reservasi == 'Dipesan') badge-warning
-                                                @elseif($reservation->status_reservasi == 'Dibayar') badge-primary
-                                                @elseif($reservation->status_reservasi == 'Selesai') badge-success
-                                                @else badge-danger
-                                                @endif">
-                                                {{ $reservation->status_reservasi }}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 @endsection
 

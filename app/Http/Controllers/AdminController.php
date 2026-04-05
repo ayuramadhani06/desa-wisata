@@ -44,16 +44,23 @@ class AdminController extends Controller
         ]);
     }
 
-    function con2($id = null)
+    function con2(Request $request, $id = null)
     {
-        $beritas = Berita::with('kategori')->latest()->get();
+        $query = Berita::with('kategori');
+
+        // FILTER 1 TANGGAL
+        if ($request->filter_date) {
+            $query->whereDate('tgl_post', $request->filter_date);
+        }
+
+        $beritas = $query->latest()->get();
         $kategori_beritas = KategoriBerita::all();
         $berita_edit = null;
-    
+
         if ($id) {
             $berita_edit = Berita::findOrFail($id);
         }
-    
+
         return view('admin.news', [
             'title' => 'Berita & Kategori',
             'beritas' => $beritas,

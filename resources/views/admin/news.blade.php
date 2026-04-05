@@ -77,6 +77,23 @@
                 <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-list"></i> Daftar Berita</h6>
             </div>
             <div class="card-body">
+                <form method="GET" action="{{ route('admin.news') }}" class="mb-3">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Pilih Tanggal</label>
+                            <input type="date" name="filter_date" class="form-control"
+                                value="{{ request('filter_date') }}">
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary mr-2">
+                                <i class="fas fa-filter"></i> Filter
+                            </button>
+                            <a href="{{ route('admin.news') }}" class="btn btn-secondary">
+                                Reset
+                            </a>
+                        </div>
+                    </div>
+                </form>
                 <div class="table-responsive">
                     <table class="table table-hover table-bordered" id="dataTable" width="100%" cellspacing="0">
                         <thead class="bg-light">

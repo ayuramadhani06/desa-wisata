@@ -45,11 +45,26 @@ class BendaharaController extends Controller
         ]);
     }
 
-    public function cont2()
+    public function cont2(Request $request)
     {
-        $reservasis = Reservasi::with(['pelanggan', 'paketWisata'])
-            ->latest()
-            ->get();
+        $query = Reservasi::with(['pelanggan', 'paketWisata']);
+
+        // FILTER TANGGAL
+        if ($request->filter_date) {
+            $query->whereDate('tgl_reservasi_wisata', $request->filter_date);
+        }
+
+        // SEARCH NAMA
+        if ($request->search) {
+            $query->where('nama_pelanggan', 'like', '%' . $request->search . '%');
+        }
+
+        // FILTER STATUS
+        if ($request->status) {
+            $query->where('status_reservasi', $request->status);
+        }
+
+        $reservasis = $query->latest()->get();
 
         return view('bendahara.konfir', [
             'title' => 'Konfirmasi',
