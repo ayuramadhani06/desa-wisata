@@ -79,7 +79,13 @@
                                             
                                             <div class="d-flex flex-column justify-content-center">
                                                 <h6 class="mb-0 text-sm">{{ $reservasi->nama_pelanggan }}</h6>
-                                                <p class="text-xs text-secondary mb-0"><i class="fas fa-envelope me-1"></i>{{ $reservasi->email }}</p>
+                                                <p class="text-xs text-secondary mb-0">
+                                                    <i class="fas fa-envelope me-1"></i>
+                                                    <a href="mailto:{{ $reservasi->email }}?subject=Konfirmasi Pembayaran Reservasi&body=Halo {{ $reservasi->nama_pelanggan }},%0D%0AKami mendapati bahwa pembayaran Anda belum sesuai (DP). Mohon melakukan pelunasan sesuai ketentuan.%0D%0ATerima kasih."
+                                                    class="text-secondary text-decoration-none">
+                                                        {{ $reservasi->email }}
+                                                    </a>
+                                                </p>
                                             </div>
                                         </div>
                                     </td>

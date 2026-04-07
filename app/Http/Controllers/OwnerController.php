@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Reservasi;
 use App\Models\Pelanggan;
@@ -22,11 +23,16 @@ class OwnerController extends Controller
         // ========================
         $start = $request->start_date;
         $end   = $request->end_date;
+        $status = $request->status;
 
         $query = Reservasi::query();
 
         if ($start && $end) {
             $query->whereBetween('created_at', [$start, $end]);
+        }
+
+        if ($status) {
+            $query->where('status_reservasi', $status);
         }
 
         // ========================
@@ -120,6 +126,7 @@ class OwnerController extends Controller
     {
         $start = $request->start_date;
         $end   = $request->end_date;
+        $status = $request->status;
 
         $query = Reservasi::with([
             'pelanggan',
@@ -134,12 +141,20 @@ class OwnerController extends Controller
             $query->whereBetween('created_at', [$start, $end]);
         }
 
+        if ($status) {
+            $query->where('status_reservasi', $status);
+        }
+
         $reservations = $query->orderBy('created_at', 'desc')->get();
+        $user = Auth::user();
+        $printedAt = now();
 
         $pdf = PDF::loadView('owner.report_pdf', [
             'reservations' => $reservations,
             'start' => $start,
-            'end' => $end
+            'end' => $end,
+            'user' => $user,
+            'printedAt' => $printedAt
         ]);
 
         return $pdf->download('laporan_reservasi_' . now()->format('Ymd_His') . '.pdf');

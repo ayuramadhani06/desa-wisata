@@ -85,5 +85,21 @@
     </tbody>
 </table>
 
+<br><br>
+<hr>
+
+<table width="100%" style="margin-top: 10px; font-size: 11px;">
+    <tr>
+        <td width="60%"></td>
+        <td class="text-center">
+            Dicetak pada:<br>
+            {{ \Carbon\Carbon::parse($printedAt)->format('d/m/Y H:i') }}<br><br>
+
+            Oleh:<br>
+            <strong>{{ $user->email }}</strong>
+        </td>
+    </tr>
+</table>
+
 </body>
 </html>

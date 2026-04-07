@@ -34,21 +34,37 @@
                         </div>
 
                         <div class="col-md-3">
+                            <label>Status</label>
+                            <select name="status" class="form-control">
+                                <option value="">-- Semua Status --</option>
+                                <option value="Dipesan" {{ request('status') == 'Dipesan' ? 'selected' : '' }}>Dipesan</option>
+                                <option value="Dibayar" {{ request('status') == 'Dibayar' ? 'selected' : '' }}>Dibayar</option>
+                                <option value="Selesai" {{ request('status') == 'Selesai' ? 'selected' : '' }}>Selesai</option>
+                                <option value="Dibatalkan" {{ request('status') == 'Dibatalkan' ? 'selected' : '' }}>Dibatalkan</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
                             <button class="btn btn-primary w-100">
                                 <i class="fas fa-filter"></i> Filter
                             </button>
                         </div>
 
-                        <div class="col-md-3 d-flex gap-3 mt-2 mt-md-0 justify-content-md-end">
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-12 d-flex justify-content-end gap-2">
                             <a href="{{ route('owner.index') }}" class="btn btn-secondary">
                                 Reset
                             </a>
 
-                            <a href="{{ route('owner.reservasi.pdf', ['start_date' => request('start_date'),'end_date' => request('end_date')]) }}" target="_blank" class="btn btn-danger">
+                            <a href="{{ route('owner.reservasi.pdf', [
+                                'start_date' => request('start_date'),
+                                'end_date' => request('end_date'),
+                                'status' => request('status')
+                            ]) }}" target="_blank" class="btn btn-danger">
                                 <i class="fas fa-file-pdf"></i> Unduh Laporan
                             </a>
                         </div>
-
                     </div>
                 </form>
             </div>
